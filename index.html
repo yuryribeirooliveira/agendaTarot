@@ -1253,77 +1253,18 @@ render();
    (iOS ignora SVG em apple-touch-icon; Canvas gera PNG real)
 ═══════════════════════════════════════════════════════════════ */
 (function setupPWA() {
+  /* Ícones pré-gerados como PNG base64 — funciona em iOS e Android */
+  const icon192 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAEQElEQVR42u3dvVEcURBF4X2vyAMSUAQQgGw54BEbHjjYCgAiUAIQCbKooraWn9mdnX3T9zsWMlRFDff07R4EapvBuDy/f9ugLM+vN22kz6cJO5KlaEKPZBma4CNZhCb4SBahCT6SRWiCj2QRuvBjTcydsSb4SG6DLvxIboMu/EiWoAs/kiXowo9kCbrwI1mCLvxIlqALP5Il6MKPZAm68CNZgu4xIZlu+iO5BbrwI1kCKxCsQKY/UltAA0ADmP5IbQENAA1g+iO1BTQANIDpj9QW0ADQAEC0ANYfpK5BGgAaACAAQAAgi+YAhgYACAAQACAAkMKZR3B8/v77s/ff/f3r0QM8It4CDRR2UhBA4AcU4unl+u7946uLh1sCCP2wn9vcMnwMf0UJCFAk+McQYVf4q0ngCC4W/O3P2b1AgKjgC7wVKCb4S4TdDSD48RPeWyDht9a4AQRf8Akg/IJPAOEXfAIIvvATYBnmegsh/Nhm+LdAc72HtvJgFxE/ECP8iBVA+LFqAbbXnSnrj/Bj9TeAyQ8rUAGEnwCx01/4CSD8IIDwgwAAAUx/EED4QYBqCD8Boqc/CGD6gwCmPwhg+oMApj8IYPqDAKY/CAAQoM70t/6sG78eHbOytl+kawXCUcK/688EsP6AAAABUJBDfoWNIxglJdAARfd/WIGicQATACAAQACAAA5gEAAgAEAAgAAAAQACAAQACAAQYPX45hwBAAIABAAIABDAIQwCzI0fP4QGAAhgDQIBAAIAUQKMfAhbgwgAEMAxDAIABMi7A7QAAQACuAW0AAGC1yASEAAkIEB6C4AAWkALECC9BUhAAE1AAgKk3wIkIIAmIAEBkluABAQACQiQ3gIkGId2eX7/ZrISOJUzj2AMcU8pwdPL9d37x1cXD7dWIKtQTHt9DP+uPxOABItK4DYgQPxOTQQCYCERtnf+tBug1FugUfbqau126iOdACRYXIaPz63ya9ryAlSXYA4pvno+1b9HUU6Az95pOyrzXibEHcFfvdP23VbhLy+AL6rnNJWz1C+ulciAKNcAU95pawPPo+QRPBVNkD0M4gVIFkEL+qcQsWEQfg0Q2QaCT4BIEQSfAJEiCD4BIkUQfAJEiiD4BIiTQegJECWEwBMgRgphJwBwNHwnGAQACAAkCvD8etM8BiTy/HrTNACsQAABAAIAgQI4hJF4AGsAaACPAASwBiFw/dEA0ACfmQFUn/4aABrgO0OAqtNfA0AD/NQUoNr01wDQAFONAapM/28bgASoHH4rEKxAhxoErHX6/7gBSICK4Z+0ApEA1cI/+QYgASqFf68jmASoEv69BCABqoR/bwFIgArhP0gAEmDt4T9YABJgzeHfbDabWcPr/xrAWoI/WwNoA6w1/LM3gDbAWoJ/dAGIgDVsFYutLETAiOv04js7ETDSHXnSo5UMOEXohxGAFMJ+av4DZL0nRteQdOAAAAAASUVORK5CYII=";
+  const icon512 = "data:image/png;base64,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";
 
-  /* Desenha o ícone: fundo gradiente roxo + lua crescente branca */
-  function makeIcon(size) {
-    const c   = document.createElement('canvas');
-    c.width   = c.height = size;
-    const ctx = c.getContext('2d');
-
-    /* 1 — fundo arredondado com gradiente roxo */
-    const grad = ctx.createLinearGradient(0, 0, size, size);
-    grad.addColorStop(0, '#3b1fa8');
-    grad.addColorStop(1, '#7c5ce8');
-    ctx.fillStyle = grad;
-    const r = size * 0.22;
-    ctx.beginPath();
-    ctx.moveTo(r, 0); ctx.lineTo(size - r, 0);
-    ctx.quadraticCurveTo(size, 0, size, r);
-    ctx.lineTo(size, size - r);
-    ctx.quadraticCurveTo(size, size, size - r, size);
-    ctx.lineTo(r, size);
-    ctx.quadraticCurveTo(0, size, 0, size - r);
-    ctx.lineTo(0, r);
-    ctx.quadraticCurveTo(0, 0, r, 0);
-    ctx.closePath();
-    ctx.fill();
-
-    /* 2 — lua crescente: círculo maior MENOS círculo menor (XOR via compositing) */
-    const cx   = size * 0.54;   // centro horizontal levemente direito
-    const cy   = size * 0.50;   // centro vertical
-    const rBig = size * 0.28;   // raio do círculo principal
-    const offX = size * 0.12;   // deslocamento do círculo de "corte"
-    const rSml = size * 0.22;   // raio do círculo de corte
-
-    // Desenha o círculo branco cheio
-    ctx.fillStyle = 'rgba(255,255,255,0.93)';
-    ctx.beginPath();
-    ctx.arc(cx, cy, rBig, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Apaga a parte que vira a sombra da lua
-    ctx.globalCompositeOperation = 'destination-out';
-    ctx.beginPath();
-    ctx.arc(cx + offX, cy - size * 0.04, rSml, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Volta ao modo normal
-    ctx.globalCompositeOperation = 'source-over';
-
-    /* 3 — brilho sutil no canto superior esquerdo */
-    const shine = ctx.createRadialGradient(
-      size * 0.28, size * 0.25, 0,
-      size * 0.28, size * 0.25, size * 0.55
-    );
-    shine.addColorStop(0, 'rgba(255,255,255,0.12)');
-    shine.addColorStop(1, 'transparent');
-    ctx.fillStyle = shine;
-    ctx.fillRect(0, 0, size, size);
-
-    return c.toDataURL('image/png');
-  }
-
-  const icon192 = makeIcon(192);
-  const icon512 = makeIcon(512);
-
-  /* Apple touch icon (iOS Springboard) */
+  /* Apple touch icon (iOS) */
   const appleLink = document.createElement('link');
   appleLink.rel   = 'apple-touch-icon';
   appleLink.sizes = '192x192';
   appleLink.href  = icon192;
   document.head.appendChild(appleLink);
 
-  /* Web App Manifest via Blob URL */
+  /* Web App Manifest */
   const manifest = {
     name:             'Agenda Tarot',
     short_name:       'Agenda Tarot',
@@ -1342,10 +1283,10 @@ render();
   };
 
   try {
-    const blob   = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-    const mLink  = document.createElement('link');
-    mLink.rel    = 'manifest';
-    mLink.href   = URL.createObjectURL(blob);
+    const blob  = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+    const mLink = document.createElement('link');
+    mLink.rel   = 'manifest';
+    mLink.href  = URL.createObjectURL(blob);
     document.head.appendChild(mLink);
   } catch(e) { /* fallback silencioso */ }
 
