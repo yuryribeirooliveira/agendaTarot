@@ -427,9 +427,9 @@ body{background:var(--bg);color:var(--text);font-family:"Poppins",sans-serif;fon
 </div>
 
 <!-- ═══ LOADING ═══ -->
-<div class="loading-overlay hidden" id="loading-overlay">
+<div class="loading-overlay" id="loading-overlay">
   <div class="loading-spinner"></div>
-  <div class="loading-text" id="loading-text">Carregando agenda…</div>
+  <div class="loading-text" id="loading-text">Verificando sessão…</div>
   <button class="loading-retry" id="loading-retry" onclick="retryInit()">Tentar novamente</button>
 </div>
 
@@ -609,6 +609,9 @@ let selectedConsultant = null;
 let isProcessing = false;
 let currentAuthTab = 'login';
 
+// ── FLAG CRÍTICA: evita que enterApp() rode mais de uma vez simultaneamente ──
+let appStarted = false;
+
 const DAYS_PT    = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
 const DAYS_ABBR  = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 const MONTHS_PT  = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
@@ -665,6 +668,22 @@ function saveLimit(v)  { localStorage.setItem(LIMIT_KEY,String(v)); }
 function loadNotes()   { try{return JSON.parse(localStorage.getItem(NOTES_KEY))||{};}catch{return{};} }
 function saveNotes2(n) { localStorage.setItem(NOTES_KEY,JSON.stringify(n)); }
 
+/* ═══ LOADING OVERLAY ═══ */
+function showLoading(msg) {
+  const overlay = document.getElementById('loading-overlay');
+  document.getElementById('loading-text').textContent = msg || 'Carregando…';
+  document.getElementById('loading-retry').classList.remove('show');
+  overlay.style.display = 'flex';
+  overlay.style.opacity = '1';
+  overlay.style.pointerEvents = 'all';
+}
+function hideLoading() {
+  const overlay = document.getElementById('loading-overlay');
+  overlay.style.opacity = '0';
+  overlay.style.pointerEvents = 'none';
+  setTimeout(() => { overlay.style.display = 'none'; }, 350);
+}
+
 /* ═══ AUTH UI ═══ */
 function switchAuthTab(tab) {
   currentAuthTab = tab;
@@ -703,7 +722,10 @@ async function handleAuthSubmit() {
     if (currentAuthTab === 'login') {
       const { data, error } = await sb.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      // onAuthStateChange vai capturar e chamar enterApp()
+      // enterApp() será chamado diretamente aqui — NÃO pelo onAuthStateChange
+      if (data.user) {
+        await enterApp(data.user);
+      }
     } else {
       const { data, error } = await sb.auth.signUp({ email, password });
       if (error) throw error;
@@ -724,13 +746,15 @@ async function handleAuthSubmit() {
 }
 
 async function doLogout() {
-  await sb.auth.signOut();
+  appStarted = false;
   currentUser = null;
   localCache = {};
+  try { await sb.auth.signOut(); } catch(_) {}
   showAuthScreen();
 }
 
 function showAuthScreen() {
+  hideLoading();
   document.getElementById('auth-screen').classList.remove('hidden');
   document.getElementById('auth-email').value = '';
   document.getElementById('auth-password').value = '';
@@ -742,35 +766,33 @@ function showAuthScreen() {
 }
 
 async function enterApp(user) {
+  // Proteção: nunca inicializa duas vezes
+  if (appStarted) return;
+  appStarted = true;
+
   currentUser = user;
   document.getElementById('auth-screen').classList.add('hidden');
-  const overlay = document.getElementById('loading-overlay');
-  overlay.classList.remove('hidden');
-  overlay.style.display = '';
-  document.getElementById('loading-text').textContent = 'Carregando agenda…';
-  document.getElementById('loading-retry').classList.remove('show');
+  showLoading('Carregando agenda…');
+
   currentWeekStart = getThisWeekMonday();
   document.getElementById('limit-display').textContent = loadLimit();
 
-  // Timeout de segurança — se demorar mais de 10s, mostra botão de retry
-  const safetyTimeout = setTimeout(() => {
+  // Timeout de segurança — 12s
+  const safetyTimer = setTimeout(() => {
     document.getElementById('loading-text').textContent = 'Demorando mais que o esperado…';
     document.getElementById('loading-retry').classList.add('show');
-  }, 10000);
+  }, 12000);
 
   try {
     await renderWeek();
+    clearTimeout(safetyTimer);
+    hideLoading();
   } catch(e) {
+    clearTimeout(safetyTimer);
     console.error('enterApp error:', e);
     document.getElementById('loading-text').textContent = 'Erro ao carregar. Tente novamente.';
     document.getElementById('loading-retry').classList.add('show');
-    clearTimeout(safetyTimeout);
-    return;
   }
-
-  clearTimeout(safetyTimeout);
-  overlay.classList.add('hidden');
-  setTimeout(()=>{ overlay.style.display='none'; }, 400);
 }
 
 /* ═══ SUPABASE DB ═══ */
@@ -1171,65 +1193,91 @@ async function renderWeek() {
 
 async function retryInit() {
   document.getElementById('loading-retry').classList.remove('show');
-  document.getElementById('loading-text').textContent='Reconectando…';
-  const overlay=document.getElementById('loading-overlay');
-  overlay.classList.remove('hidden'); overlay.style.display='';
-  await renderWeek();
-  overlay.classList.add('hidden');
-  setTimeout(()=>overlay.style.display='none',400);
+  showLoading('Reconectando…');
+  try {
+    await renderWeek();
+    hideLoading();
+  } catch(e) {
+    document.getElementById('loading-text').textContent = 'Erro ao carregar. Tente novamente.';
+    document.getElementById('loading-retry').classList.add('show');
+  }
 }
 
-/* ═══ INIT ═══ */
+/* ═══════════════════════════════════════════════
+   INIT — lógica simplificada e sem conflito
+   ═══════════════════════════════════════════════ */
 (async function init() {
-  if(typeof supabase==='undefined') {
+  if (typeof supabase === 'undefined') {
     alert('Erro: biblioteca Supabase não carregou. Verifique sua conexão.');
     return;
   }
-  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-  // Escuta mudanças de sessão (login, logout, token refresh)
-  sb.auth.onAuthStateChange(async (event, session) => {
-    if(event === 'SIGNED_OUT' || event === 'USER_DELETED') {
-      currentUser = null;
-      localCache = {};
-      showAuthScreen();
-      return;
-    }
-    if(event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-      if(session && session.user && !currentUser) {
-        await enterApp(session.user);
-      }
-      return;
-    }
-    // Para qualquer outro evento sem sessão válida
-    if(!session || !session.user) {
-      currentUser = null;
-      showAuthScreen();
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
+    auth: {
+      // Persiste sessão no localStorage (padrão) — mas detectamos sessões inválidas logo abaixo
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
     }
   });
 
-  // Verifica sessão existente com timeout de 5s para evitar trava
-  try {
-    const sessionPromise = sb.auth.getSession();
-    const timeoutPromise = new Promise((_,reject) => setTimeout(()=>reject(new Error('timeout')), 5000));
-    const { data: { session } } = await Promise.race([sessionPromise, timeoutPromise]);
-
-    if(session && session.user) {
-      // Verifica se o usuário ainda existe no servidor
-      const { data: { user }, error } = await sb.auth.getUser();
-      if(error || !user) {
-        // Sessão inválida ou usuário deletado — limpa e mostra login
-        await sb.auth.signOut();
-        showAuthScreen();
-      } else {
-        await enterApp(user);
-      }
-    } else {
+  // ── Só escuta SIGNED_OUT depois que o app já iniciou ──
+  // Não usamos onAuthStateChange para inicializar o app,
+  // evitando conflito com a verificação abaixo.
+  sb.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+      appStarted = false;
+      currentUser = null;
+      localCache = {};
       showAuthScreen();
     }
-  } catch(e) {
-    // Timeout ou erro de rede — mostra tela de login
-    console.warn('Init session check failed:', e.message);
+    // TOKEN_REFRESHED e SIGNED_IN são ignorados — o estado já foi tratado no init
+  });
+
+  // ── Verifica sessão existente (com timeout de 6s para celular) ──
+  showLoading('Verificando sessão…');
+
+  let session = null;
+  try {
+    const result = await Promise.race([
+      sb.auth.getSession(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 6000))
+    ]);
+    session = result?.data?.session ?? null;
+  } catch (e) {
+    console.warn('getSession falhou ou deu timeout:', e.message);
+    // Sem sessão confirmada — vai para login
+    showAuthScreen();
+    return;
+  }
+
+  if (!session?.user) {
+    // Nenhuma sessão salva — tela de login normalmente
+    showAuthScreen();
+    return;
+  }
+
+  // ── Sessão existe: valida se o usuário ainda existe no servidor ──
+  try {
+    const { data: { user }, error } = await Promise.race([
+      sb.auth.getUser(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
+    ]);
+
+    if (error || !user) {
+      // Sessão fantasma (conta deletada, token inválido)
+      console.warn('Sessão inválida, limpando…');
+      await sb.auth.signOut();
+      showAuthScreen();
+      return;
+    }
+
+    // Tudo certo — entra no app
+    await enterApp(user);
+
+  } catch (e) {
+    console.warn('getUser falhou ou deu timeout:', e.message);
+    // Sem confirmação do servidor — limpa por segurança e vai para login
     try { await sb.auth.signOut(); } catch(_) {}
     showAuthScreen();
   }
