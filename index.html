@@ -9,6 +9,19 @@
 <meta name="apple-mobile-web-app-title" content="Agenda Tarot" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="theme-color" content="#6741d9" />
+
+<!-- PWA Manifest inline para tela cheia no Android -->
+<link rel="manifest" href="data:application/manifest+json,{
+  %22name%22:%22Agenda%20de%20Tarot%22,
+  %22short_name%22:%22Agenda%20Tarot%22,
+  %22start_url%22:%22.%22,
+  %22display%22:%22standalone%22,
+  %22background_color%22:%22%236741d9%22,
+  %22theme_color%22:%22%236741d9%22,
+  %22orientation%22:%22portrait%22,
+  %22icons%22:[{%22src%22:%22https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f52e.png%22,%22sizes%22:%2272x72%22,%22type%22:%22image/png%22}]
+}" />
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -33,9 +46,10 @@ body{background:var(--bg);color:var(--text);font-family:"Poppins",sans-serif;fon
 /* ═══ TELA DE AUTH ═══ */
 .auth-screen {
   position:fixed;inset:0;background:var(--bg);
-  display:flex;align-items:center;justify-content:center;
+  display:none;align-items:center;justify-content:center;
   padding:24px;z-index:9999;
 }
+.auth-screen.visible{display:flex}
 .auth-screen.hidden{display:none}
 .auth-box {
   background:var(--bg2);border-radius:var(--radius);
@@ -755,7 +769,9 @@ async function doLogout() {
 
 function showAuthScreen() {
   hideLoading();
-  document.getElementById('auth-screen').classList.remove('hidden');
+  const screen = document.getElementById('auth-screen');
+  screen.classList.add('visible');
+  screen.classList.remove('hidden');
   document.getElementById('auth-email').value = '';
   document.getElementById('auth-password').value = '';
   document.getElementById('auth-error').classList.remove('show');
@@ -771,7 +787,9 @@ async function enterApp(user) {
   appStarted = true;
 
   currentUser = user;
-  document.getElementById('auth-screen').classList.add('hidden');
+  const screen = document.getElementById('auth-screen');
+  screen.classList.remove('visible');
+  screen.classList.add('hidden');
   showLoading('Carregando agenda…');
 
   currentWeekStart = getThisWeekMonday();
