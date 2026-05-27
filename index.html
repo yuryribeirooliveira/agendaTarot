@@ -10,17 +10,8 @@
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="theme-color" content="#6741d9" />
 
-<!-- PWA Manifest inline para tela cheia no Android -->
-<link rel="manifest" href="data:application/manifest+json,{
-  %22name%22:%22Agenda%20de%20Tarot%22,
-  %22short_name%22:%22Agenda%20Tarot%22,
-  %22start_url%22:%22.%22,
-  %22display%22:%22standalone%22,
-  %22background_color%22:%22%236741d9%22,
-  %22theme_color%22:%22%236741d9%22,
-  %22orientation%22:%22portrait%22,
-  %22icons%22:[{%22src%22:%22https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f52e.png%22,%22sizes%22:%2272x72%22,%22type%22:%22image/png%22}]
-}" />
+<!-- PWA Manifest -->
+<link rel="manifest" href="manifest.json" />
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -677,10 +668,29 @@ function showSync(state,msg) {
 /* ═══ LIMIT / NOTES (localStorage) ═══ */
 const NOTES_KEY='tarot_notes_2026';
 const LIMIT_KEY='tarot_daily_limit_2026';
+// localStorage só como cache rápido; fonte da verdade é o Supabase
 function loadLimit()   { const v=parseInt(localStorage.getItem(LIMIT_KEY)); return isNaN(v)?6:v; }
 function saveLimit(v)  { localStorage.setItem(LIMIT_KEY,String(v)); }
 function loadNotes()   { try{return JSON.parse(localStorage.getItem(NOTES_KEY))||{};}catch{return{};} }
 function saveNotes2(n) { localStorage.setItem(NOTES_KEY,JSON.stringify(n)); }
+
+async function fetchLimitFromDB() {
+  try {
+    const { data, error } = await sb.from('configuracoes_tarot')
+      .select('valor').eq('chave','limite_diario').eq('user_id', currentUser.id).single();
+    if (error || !data) return null;
+    return parseInt(data.valor);
+  } catch(e) { return null; }
+}
+
+async function saveLimitToDB(v) {
+  try {
+    await sb.from('configuracoes_tarot').upsert(
+      { chave:'limite_diario', valor: String(v), user_id: currentUser.id },
+      { onConflict: 'chave,user_id' }
+    );
+  } catch(e) { console.warn('saveLimitToDB:', e); }
+}
 
 /* ═══ LOADING OVERLAY ═══ */
 function showLoading(msg) {
@@ -793,6 +803,12 @@ async function enterApp(user) {
   showLoading('Carregando agenda…');
 
   currentWeekStart = getThisWeekMonday();
+
+  // Carrega limite da nuvem (fallback para localStorage se falhar)
+  const cloudLimit = await fetchLimitFromDB();
+  if (cloudLimit !== null) {
+    saveLimit(cloudLimit); // sincroniza cache local
+  }
   document.getElementById('limit-display').textContent = loadLimit();
 
   // Timeout de segurança — 12s
@@ -988,7 +1004,10 @@ function saveNotes() {
 /* ═══ STEPPERS ═══ */
 function changeLimit(delta) {
   let v=loadLimit()+delta; if(v<1)v=1; if(v>99)v=99;
-  saveLimit(v); document.getElementById('limit-display').textContent=v; render();
+  saveLimit(v);
+  document.getElementById('limit-display').textContent=v;
+  render();
+  saveLimitToDB(v); // salva na nuvem em background
 }
 function changeQ(key,delta) {
   const el=document.getElementById(`qval-${key}`); if(!el) return;
