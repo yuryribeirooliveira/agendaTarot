@@ -9,10 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Agenda Tarot" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="theme-color" content="#6741d9" />
-
-<!-- PWA Manifest -->
 <link rel="manifest" href="manifest.json" />
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -34,229 +31,141 @@ body{background:var(--bg);color:var(--text);font-family:"Poppins",sans-serif;fon
   padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);
   padding-bottom:calc(var(--footer-h) + env(safe-area-inset-bottom,0px));overflow-x:hidden}
 
-/* ═══ TELA DE AUTH ═══ */
-.auth-screen {
-  position:fixed;inset:0;background:var(--bg);
-  display:none;align-items:center;justify-content:center;
-  padding:24px;z-index:9999;
-}
+/* AUTH */
+.auth-screen{position:fixed;inset:0;background:var(--bg);display:none;align-items:center;justify-content:center;padding:24px;z-index:9999}
 .auth-screen.visible{display:flex}
-.auth-screen.hidden{display:none}
-.auth-box {
-  background:var(--bg2);border-radius:var(--radius);
-  padding:32px 28px;width:100%;max-width:400px;
-  box-shadow:var(--shadow-md);
-}
+.auth-box{background:var(--bg2);border-radius:var(--radius);padding:32px 28px;width:100%;max-width:400px;box-shadow:var(--shadow-md)}
 .auth-ornament{font-size:10px;letter-spacing:6px;color:var(--purple);opacity:.6;text-align:center;margin-bottom:4px}
-.auth-title{font-size:22px;font-weight:800;color:var(--text);text-align:center;
-  letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.auth-title{font-size:22px;font-weight:800;color:var(--text);text-align:center;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
 .auth-subtitle{font-size:12px;color:var(--text3);text-align:center;margin-bottom:28px}
 .auth-tabs{display:flex;background:var(--bg3);border-radius:var(--radius-sm);padding:3px;margin-bottom:24px}
-.auth-tab{flex:1;padding:8px;border:none;background:none;border-radius:6px;
-  font-family:"Poppins",sans-serif;font-size:13px;font-weight:600;color:var(--text3);
-  cursor:pointer;transition:all var(--tr)}
+.auth-tab{flex:1;padding:8px;border:none;background:none;border-radius:6px;font-family:"Poppins",sans-serif;font-size:13px;font-weight:600;color:var(--text3);cursor:pointer;transition:all var(--tr)}
 .auth-tab.active{background:var(--bg2);color:var(--purple);box-shadow:0 1px 4px rgba(0,0,0,.1)}
 .auth-field{margin-bottom:14px}
-.auth-field label{display:block;font-size:11px;font-weight:600;color:var(--text2);
-  text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.auth-field input{width:100%;padding:11px 14px;border:1.5px solid var(--border);
-  border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;font-size:14px;
-  color:var(--text);background:var(--bg);transition:border-color var(--tr)}
+.auth-field label{display:block;font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.auth-field input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;font-size:14px;color:var(--text);background:var(--bg);transition:border-color var(--tr)}
 .auth-field input:focus{outline:none;border-color:var(--purple);background:var(--bg2)}
-.auth-btn{width:100%;padding:13px;background:var(--purple);color:#fff;border:none;
-  border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;font-size:14px;
-  font-weight:700;cursor:pointer;transition:background var(--tr);margin-top:4px;
-  letter-spacing:.3px}
+.auth-btn{width:100%;padding:13px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background var(--tr);margin-top:4px}
 .auth-btn:hover{background:var(--purple2)}
 .auth-btn:disabled{opacity:.6;cursor:not-allowed}
-.auth-error{background:var(--over-bg);color:var(--over);border:1px solid #f7c1c1;
-  border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;font-weight:500;
-  margin-bottom:14px;display:none}
+.auth-error{background:var(--over-bg);color:var(--over);border:1px solid #f7c1c1;border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;font-weight:500;margin-bottom:14px;display:none}
 .auth-error.show{display:block}
-.auth-success{background:var(--ok-bg);color:var(--ok);border:1px solid #b6dfc4;
-  border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;font-weight:500;
-  margin-bottom:14px;display:none;text-align:center}
+.auth-success{background:var(--ok-bg);color:var(--ok);border:1px solid #b6dfc4;border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;font-weight:500;margin-bottom:14px;display:none;text-align:center}
 .auth-success.show{display:block}
 
-/* ═══ USER BAR no header ═══ */
-.user-bar{display:flex;align-items:center;gap:8px}
-.user-email{font-size:11px;color:var(--text3);max-width:140px;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.logout-btn{background:none;border:1px solid var(--border);color:var(--text3);
-  border-radius:50px;padding:4px 10px;font-family:"Poppins",sans-serif;
-  font-size:11px;font-weight:500;cursor:pointer;transition:all var(--tr);white-space:nowrap}
-.logout-btn:hover{border-color:var(--over);color:var(--over)}
-
 /* LOADING */
-.loading-overlay{position:fixed;inset:0;background:rgba(245,244,248,.95);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  z-index:8888;gap:14px;transition:opacity .3s ease}
-.loading-overlay.hidden{opacity:0;pointer-events:none}
-.loading-spinner{width:44px;height:44px;border:4px solid var(--purple-lt);
-  border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite}
+.loading-overlay{position:fixed;inset:0;background:rgba(245,244,248,.95);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:8888;gap:14px}
+.loading-overlay.visible{display:flex}
+.loading-spinner{width:44px;height:44px;border:4px solid var(--purple-lt);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-text{font-size:13px;color:var(--text3);font-weight:500}
-.loading-retry{margin-top:8px;padding:8px 20px;background:var(--purple);color:#fff;
-  border:none;border-radius:50px;font-family:"Poppins",sans-serif;font-size:13px;
-  font-weight:600;cursor:pointer;display:none}
+.loading-retry{margin-top:8px;padding:8px 20px;background:var(--purple);color:#fff;border:none;border-radius:50px;font-family:"Poppins",sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:none}
 .loading-retry.show{display:block}
 
 /* SYNC */
-.sync-indicator{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:14px;
-  background:var(--bg2);border:1px solid var(--border);border-radius:50px;
-  padding:4px 10px;font-size:11px;font-weight:500;color:var(--text3);
-  z-index:150;display:flex;align-items:center;gap:5px;
-  opacity:0;transition:opacity .3s ease;pointer-events:none}
+.sync-indicator{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:14px;background:var(--bg2);border:1px solid var(--border);border-radius:50px;padding:4px 10px;font-size:11px;font-weight:500;color:var(--text3);z-index:150;display:flex;align-items:center;gap:5px;opacity:0;transition:opacity .3s ease;pointer-events:none}
 .sync-indicator.visible{opacity:1}
 .sync-dot{width:7px;height:7px;border-radius:50%;background:var(--ok);flex-shrink:0}
 .sync-dot.syncing{background:var(--warn);animation:pulse .8s infinite}
 .sync-dot.error{background:var(--over)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* SIDEBAR OVERLAY */
-.sidebar-overlay{position:fixed;inset:0;background:rgba(10,8,24,.45);
-  backdrop-filter:blur(2px);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s ease}
-.sidebar-overlay.open{opacity:1;pointer-events:all}
-
 /* SIDEBAR */
-.sidebar{position:fixed;top:0;left:0;bottom:0;width:min(82vw,320px);background:var(--bg2);
-  z-index:310;transform:translateX(-100%);transition:transform .32s cubic-bezier(.4,0,.2,1);
-  display:flex;flex-direction:column;overflow:hidden;box-shadow:4px 0 32px rgba(103,65,217,.18)}
+.sidebar-overlay{position:fixed;inset:0;background:rgba(10,8,24,.45);backdrop-filter:blur(2px);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s ease}
+.sidebar-overlay.open{opacity:1;pointer-events:all}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:min(82vw,320px);background:var(--bg2);z-index:310;transform:translateX(-100%);transition:transform .32s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden;box-shadow:4px 0 32px rgba(103,65,217,.18)}
 .sidebar.open{transform:translateX(0)}
-.sidebar-header{background:linear-gradient(135deg,#3b1fa8 0%,#7c5ce8 100%);
-  padding:calc(16px + env(safe-area-inset-top,0px)) 18px 16px;
-  display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.sidebar-header{background:linear-gradient(135deg,#3b1fa8 0%,#7c5ce8 100%);padding:calc(16px + env(safe-area-inset-top,0px)) 18px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .sidebar-title{color:#fff;font-size:15px;font-weight:700;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
-.sidebar-close{background:rgba(255,255,255,.15);border:none;color:#fff;
-  width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;transition:background var(--tr);touch-action:manipulation}
+.sidebar-close{background:rgba(255,255,255,.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background var(--tr);touch-action:manipulation}
 .sidebar-close:hover{background:rgba(255,255,255,.28)}
 .sidebar-body{flex:1;overflow-y:auto;padding:0 0 16px;-webkit-overflow-scrolling:touch}
 .sb-section{border-bottom:1px solid var(--border);padding:14px 16px}
 .sb-section:last-child{border-bottom:none}
-.sb-section-title{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--purple);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.sb-section-title{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple);margin-bottom:10px;display:flex;align-items:center;gap:6px}
 .mini-cal{width:100%}
 .mini-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .mini-cal-title{font-size:13px;font-weight:600;color:var(--text)}
-.mini-cal-nav{background:none;border:1px solid var(--border);color:var(--text2);
-  width:26px;height:26px;border-radius:6px;font-size:12px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;transition:all var(--tr);touch-action:manipulation}
+.mini-cal-nav{background:none;border:1px solid var(--border);color:var(--text2);width:26px;height:26px;border-radius:6px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--tr);touch-action:manipulation}
 .mini-cal-nav:hover{background:var(--purple-lt);border-color:var(--purple);color:var(--purple)}
 .mini-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
 .mini-cal-dow{font-size:9px;font-weight:600;color:var(--text3);text-align:center;padding:2px 0;text-transform:uppercase}
-.mini-cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:400;color:var(--text2);border-radius:6px;
-  cursor:pointer;position:relative;transition:all var(--tr);touch-action:manipulation}
+.mini-cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:400;color:var(--text2);border-radius:6px;cursor:pointer;position:relative;transition:all var(--tr);touch-action:manipulation}
 .mini-cal-day:hover{background:var(--purple-lt);color:var(--purple)}
 .mini-cal-day.today{background:var(--purple);color:#fff;font-weight:700}
-.mini-cal-day.has-appt::after{content:"";position:absolute;bottom:2px;
-  width:4px;height:4px;border-radius:50%;background:var(--ok)}
+.mini-cal-day.has-appt::after{content:"";position:absolute;bottom:2px;width:4px;height:4px;border-radius:50%;background:var(--ok)}
 .mini-cal-day.today.has-appt::after{background:rgba(255,255,255,.8)}
 .mini-cal-day.empty{cursor:default}
 .search-input-wrap{position:relative;margin-bottom:8px}
 .search-input-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
-.sb-search-input{width:100%;padding:9px 10px 9px 34px;border:1.5px solid var(--border);
-  border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;font-size:13px;color:var(--text);background:var(--bg)}
+.sb-search-input{width:100%;padding:9px 10px 9px 34px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;font-size:13px;color:var(--text);background:var(--bg)}
 .sb-search-input:focus{outline:none;border-color:var(--purple);background:var(--bg2)}
 .search-results{display:flex;flex-direction:column;gap:4px;max-height:130px;overflow-y:auto;margin-bottom:8px}
-.search-result-item{padding:7px 10px;background:var(--bg);border:1px solid var(--border);
-  border-radius:var(--radius-sm);font-size:12px;font-weight:500;color:var(--text);
-  cursor:pointer;transition:all var(--tr);display:flex;align-items:center;justify-content:space-between;gap:6px}
+.search-result-item{padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;font-weight:500;color:var(--text);cursor:pointer;transition:all var(--tr);display:flex;align-items:center;justify-content:space-between;gap:6px}
 .search-result-item:hover{background:var(--purple-lt);border-color:var(--purple);color:var(--purple)}
 .search-result-meta{font-size:10px;color:var(--text3);font-weight:400}
 .notes-area-wrap{display:none}
 .notes-area-wrap.visible{display:block}
 .notes-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:5px}
-.notes-textarea{width:100%;min-height:80px;padding:8px 10px;border:1.5px solid var(--border);
-  border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;font-size:12px;
-  color:var(--text);background:var(--bg);resize:vertical}
+.notes-textarea{width:100%;min-height:80px;padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;font-size:12px;color:var(--text);background:var(--bg);resize:vertical}
 .notes-textarea:focus{outline:none;border-color:var(--purple);background:var(--bg2)}
-.notes-save-btn{margin-top:6px;width:100%;padding:8px;background:var(--purple);color:#fff;
-  border:none;border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;
-  font-size:12px;font-weight:600;cursor:pointer;transition:background var(--tr);touch-action:manipulation}
+.notes-save-btn{margin-top:6px;width:100%;padding:8px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:background var(--tr);touch-action:manipulation}
 .notes-save-btn:hover{background:var(--purple2)}
 .sb-shortcuts{display:flex;flex-direction:column;gap:6px}
-.sb-shortcut-btn{display:flex;align-items:center;gap:10px;padding:10px 12px;
-  background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);
-  font-family:"Poppins",sans-serif;font-size:13px;font-weight:500;color:var(--text2);
-  cursor:pointer;transition:all var(--tr);touch-action:manipulation;text-align:left;width:100%}
+.sb-shortcut-btn{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;transition:all var(--tr);touch-action:manipulation;text-align:left;width:100%}
 .sb-shortcut-btn:hover{background:var(--purple-lt);border-color:var(--purple);color:var(--purple)}
 .sb-shortcut-btn .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
 /* HEADER */
-.app-header{background:var(--bg2);border-bottom:1px solid var(--border);
-  padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;
-  position:sticky;top:0;z-index:100;box-shadow:var(--shadow);
-  display:flex;align-items:center;gap:10px}
-.hamburger-btn{background:none;border:none;padding:6px;cursor:pointer;color:var(--text2);
-  display:flex;flex-direction:column;gap:4px;flex-shrink:0;touch-action:manipulation;
-  border-radius:6px;transition:background var(--tr)}
+.app-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px}
+.hamburger-btn{background:none;border:none;padding:6px;cursor:pointer;color:var(--text2);display:flex;flex-direction:column;gap:4px;flex-shrink:0;touch-action:manipulation;border-radius:6px;transition:background var(--tr)}
 .hamburger-btn:hover{background:var(--purple-lt)}
 .hamburger-btn span{display:block;width:20px;height:2px;background:currentColor;border-radius:2px}
 .header-center{flex:1;text-align:center}
 .header-ornament{font-size:9px;letter-spacing:5px;color:var(--purple);opacity:.6;line-height:1}
-.app-title{font-size:clamp(14px,3.5vw,19px);font-weight:800;color:var(--text);
-  letter-spacing:1.5px;text-transform:uppercase;line-height:1.2}
+.app-title{font-size:clamp(14px,3.5vw,19px);font-weight:800;color:var(--text);letter-spacing:1.5px;text-transform:uppercase;line-height:1.2}
 .app-subtitle{font-size:10px;color:var(--text3);font-weight:300;letter-spacing:.3px}
+.user-bar{display:flex;align-items:center;gap:8px}
+.logout-btn{background:none;border:1px solid var(--border);color:var(--text3);border-radius:50px;padding:4px 10px;font-family:"Poppins",sans-serif;font-size:11px;font-weight:500;cursor:pointer;transition:all var(--tr);white-space:nowrap}
+.logout-btn:hover{border-color:var(--over);color:var(--over)}
 
 /* NAV */
 .nav-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 12px 6px}
 .nav-row1{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .nav-row2{display:flex;justify-content:center;margin-top:6px}
-.nav-btn{background:var(--bg);border:1.5px solid var(--border);color:var(--text2);
-  padding:6px 14px;border-radius:50px;cursor:pointer;font-family:"Poppins",sans-serif;
-  font-size:12px;font-weight:500;transition:all var(--tr);
-  display:flex;align-items:center;gap:5px;touch-action:manipulation;white-space:nowrap}
+.nav-btn{background:var(--bg);border:1.5px solid var(--border);color:var(--text2);padding:6px 14px;border-radius:50px;cursor:pointer;font-family:"Poppins",sans-serif;font-size:12px;font-weight:500;transition:all var(--tr);display:flex;align-items:center;gap:5px;touch-action:manipulation;white-space:nowrap}
 .nav-btn:hover{background:var(--purple-lt);border-color:var(--purple);color:var(--purple)}
 .nav-btn.current-week{background:var(--purple);border-color:var(--purple);color:#fff}
 .nav-btn.current-week:hover{background:var(--purple2)}
-.week-label{font-size:12px;font-weight:600;color:var(--text);text-align:center;
-  flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.week-label{font-size:12px;font-weight:600;color:var(--text);text-align:center;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* LIMITE */
-.limit-bar{display:flex;align-items:center;justify-content:center;gap:10px;
-  padding:8px 16px;background:var(--bg);border-bottom:1px solid var(--border);
-  font-size:12px;color:var(--text2)}
+.limit-bar{display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 16px;background:var(--bg);border-bottom:1px solid var(--border);font-size:12px;color:var(--text2)}
 .limit-bar label{font-weight:500}
-.stepper{display:flex;align-items:center;border:1.5px solid var(--border);
-  border-radius:var(--radius-sm);overflow:hidden;background:var(--bg2)}
-.stepper-btn{background:none;border:none;width:32px;height:32px;font-size:16px;font-weight:600;
-  color:var(--purple);cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:background var(--tr);touch-action:manipulation;flex-shrink:0;font-family:"Poppins",sans-serif}
+.stepper{display:flex;align-items:center;border:1.5px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;background:var(--bg2)}
+.stepper-btn{background:none;border:none;width:32px;height:32px;font-size:16px;font-weight:600;color:var(--purple);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background var(--tr);touch-action:manipulation;flex-shrink:0;font-family:"Poppins",sans-serif}
 .stepper-btn:hover{background:var(--purple-lt)}
-.stepper-val{min-width:34px;text-align:center;font-size:14px;font-weight:700;color:var(--text);
-  font-family:"Poppins",sans-serif;border-left:1px solid var(--border);
-  border-right:1px solid var(--border);padding:0 4px;line-height:32px}
+.stepper-val{min-width:34px;text-align:center;font-size:14px;font-weight:700;color:var(--text);font-family:"Poppins",sans-serif;border-left:1px solid var(--border);border-right:1px solid var(--border);padding:0 4px;line-height:32px}
 
 /* FILTER BANNER */
-.filter-banner{background:var(--purple-lt);border-bottom:1px solid rgba(103,65,217,.2);
-  padding:7px 16px;display:none;align-items:center;
-  justify-content:space-between;font-size:12px;font-weight:600;color:var(--purple)}
+.filter-banner{background:var(--purple-lt);border-bottom:1px solid rgba(103,65,217,.2);padding:7px 16px;display:none;align-items:center;justify-content:space-between;font-size:12px;font-weight:600;color:var(--purple)}
 .filter-banner.visible{display:flex}
 .filter-clear{background:none;border:none;font-size:18px;color:var(--purple);cursor:pointer;line-height:1;touch-action:manipulation}
 
 /* GRID */
-.week-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));
-  gap:16px;padding:16px 14px 24px;max-width:1400px;margin:0 auto}
+.week-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;padding:16px 14px 24px;max-width:1400px;margin:0 auto}
 
 /* CARD */
-.day-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);
-  overflow:hidden;box-shadow:var(--shadow);transition:box-shadow var(--tr),border-color var(--tr);
-  display:flex;flex-direction:column}
+.day-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:box-shadow var(--tr),border-color var(--tr);display:flex;flex-direction:column}
 .day-card:hover{box-shadow:var(--shadow-md)}
 .day-card.today{border-color:var(--purple);box-shadow:0 0 0 2px var(--purple-lt),var(--shadow-md)}
 .day-card.hidden-by-filter{display:none}
-.pending-alert{background:#fff8e1;border-bottom:1px solid #ffe082;
-  padding:7px 12px;font-size:11px;color:#7b5800;font-weight:500;
-  display:flex;align-items:flex-start;gap:6px}
+.pending-alert{background:#fff8e1;border-bottom:1px solid #ffe082;padding:7px 12px;font-size:11px;color:#7b5800;font-weight:500;display:flex;align-items:flex-start;gap:6px}
 .pending-alert-icon{flex-shrink:0;font-size:13px}
 .card-header{padding:12px 14px 10px;border-bottom:1px solid var(--border)}
 .day-name{font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text);line-height:1.2}
 .day-date{font-size:11px;color:var(--text3);font-weight:300;margin-top:1px}
-.today-badge{display:inline-block;background:var(--purple);color:#fff;
-  font-size:9px;font-weight:700;padding:2px 7px;border-radius:50px;
-  margin-left:7px;vertical-align:middle;letter-spacing:.5px}
+.today-badge{display:inline-block;background:var(--purple);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:50px;margin-left:7px;vertical-align:middle;letter-spacing:.5px}
 .slot-bar-wrap{margin-top:8px}
 .slot-info{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px}
 .slot-label{color:var(--text3)}
@@ -269,40 +178,23 @@ body{background:var(--bg);color:var(--text);font-family:"Poppins",sans-serif;fon
 .status-ok .card-header{background:linear-gradient(135deg,var(--ok-bg) 0%,#fff 65%)}
 .status-warn .card-header{background:linear-gradient(135deg,var(--warn-bg) 0%,#fff 65%)}
 .status-over .card-header{background:linear-gradient(135deg,var(--over-bg) 0%,#fff 65%)}
-.done-count-badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;
-  border-radius:50px;background:var(--purple-lt);color:var(--purple);
-  border:1px solid rgba(103,65,217,.2);margin-top:5px}
+.done-count-badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:50px;background:var(--purple-lt);color:var(--purple);border:1px solid rgba(103,65,217,.2);margin-top:5px}
 .card-body{padding:10px 12px;flex:1;display:flex;flex-direction:column;gap:8px}
 .add-form{display:flex;gap:6px;align-items:stretch}
-.input-name{flex:1;padding:8px 10px;border:1.5px solid var(--border);
-  border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;
-  font-size:13px;color:var(--text);background:var(--bg);min-width:0;
-  transition:border-color var(--tr),background var(--tr)}
+.input-name{flex:1;padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;font-size:13px;color:var(--text);background:var(--bg);min-width:0;transition:border-color var(--tr),background var(--tr)}
 .input-name:focus{outline:none;border-color:var(--purple);background:var(--bg2)}
-.q-stepper{display:flex;align-items:center;border:1.5px solid var(--border);
-  border-radius:var(--radius-sm);overflow:hidden;background:var(--bg2);flex-shrink:0}
+.q-stepper{display:flex;align-items:center;border:1.5px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;background:var(--bg2);flex-shrink:0}
 .q-stepper .stepper-btn{width:26px;height:36px;font-size:14px}
 .q-stepper .stepper-val{min-width:26px;font-size:12px;line-height:36px}
-.add-btn{background:var(--purple);color:#fff;border:none;border-radius:var(--radius-sm);
-  padding:8px 12px;font-family:"Poppins",sans-serif;font-size:12px;font-weight:700;
-  cursor:pointer;transition:background var(--tr),transform var(--tr);
-  white-space:nowrap;flex-shrink:0;touch-action:manipulation}
+.add-btn{background:var(--purple);color:#fff;border:none;border-radius:var(--radius-sm);padding:8px 12px;font-family:"Poppins",sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:background var(--tr),transform var(--tr);white-space:nowrap;flex-shrink:0;touch-action:manipulation}
 .add-btn:hover{background:var(--purple2)}
 .add-btn:active{transform:scale(.95)}
 .clients-list{display:flex;flex-direction:column;gap:5px}
-.client-item{display:flex;align-items:center;gap:6px;
-  background:var(--parchment);border:1px solid var(--parchment-b);
-  border-radius:var(--radius-sm);padding:7px 9px;
-  animation:slideIn .2s ease;transition:opacity .2s ease}
+.client-item{display:flex;align-items:center;gap:6px;background:var(--parchment);border:1px solid var(--parchment-b);border-radius:var(--radius-sm);padding:7px 9px;animation:slideIn .2s ease;transition:opacity .2s ease}
 @keyframes slideIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
-.client-name{flex:1;font-size:13px;font-weight:500;color:var(--text);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.q-pill{background:var(--purple-lt);color:var(--purple);font-size:10px;font-weight:700;
-  padding:2px 7px;border-radius:50px;flex-shrink:0}
-.action-btn{border:none;border-radius:5px;width:27px;height:27px;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:12px;transition:background var(--tr),transform var(--tr);
-  flex-shrink:0;touch-action:manipulation}
+.client-name{flex:1;font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.q-pill{background:var(--purple-lt);color:var(--purple);font-size:10px;font-weight:700;padding:2px 7px;border-radius:50px;flex-shrink:0}
+.action-btn{border:none;border-radius:5px;width:27px;height:27px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;transition:background var(--tr),transform var(--tr);flex-shrink:0;touch-action:manipulation}
 .action-btn:active{transform:scale(.88)}
 .action-btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .btn-done{background:var(--ok-bg);color:var(--ok)} .btn-done:hover{background:#c6e8d0}
@@ -313,129 +205,85 @@ body{background:var(--bg);color:var(--text);font-family:"Poppins",sans-serif;fon
 .client-item.done .client-name{text-decoration:line-through;text-decoration-color:var(--text3);color:var(--text3)}
 .client-item.done .q-pill{background:var(--bg3);color:var(--text3)}
 .done-section{border-top:1px dashed var(--border);padding-top:7px}
-.done-title{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;
-  letter-spacing:1px;margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.done-title{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;display:flex;align-items:center;gap:5px}
 .done-title::before{content:"◐";font-size:9px;color:var(--purple);opacity:.5}
 .empty-state{text-align:center;padding:12px 0 6px;color:var(--text3);font-size:11px;font-style:italic;font-weight:300}
 
-/* MODAL REMARCAR */
-.modal-overlay{position:fixed;inset:0;background:rgba(10,8,24,.5);backdrop-filter:blur(3px);z-index:500;
-  display:flex;align-items:flex-end;justify-content:center;
-  padding:0 0 env(safe-area-inset-bottom,0px);
-  opacity:0;pointer-events:none;transition:opacity .25s ease}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(10,8,24,.5);backdrop-filter:blur(3px);z-index:500;display:flex;align-items:flex-end;justify-content:center;padding:0 0 env(safe-area-inset-bottom,0px);opacity:0;pointer-events:none;transition:opacity .25s ease}
 .modal-overlay.open{opacity:1;pointer-events:all}
-.modal-box{background:var(--bg2);border-radius:20px 20px 0 0;
-  padding:20px 18px calc(20px + env(safe-area-inset-bottom,0px));
-  width:100%;max-width:480px;
-  transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
-  max-height:80vh;overflow-y:auto}
+.modal-box{background:var(--bg2);border-radius:20px 20px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom,0px));width:100%;max-width:480px;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);max-height:80vh;overflow-y:auto}
 .modal-overlay.open .modal-box{transform:translateY(0)}
 .modal-handle{width:40px;height:4px;background:var(--border);border-radius:99px;margin:0 auto 16px}
 .modal-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px}
 .modal-subtitle{font-size:12px;color:var(--text3);margin-bottom:14px}
 .reschedule-days{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.reschedule-day-btn{padding:10px 12px;background:var(--bg);border:1.5px solid var(--border);
-  border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;font-size:12px;font-weight:500;
-  color:var(--text2);cursor:pointer;transition:all var(--tr);text-align:left;touch-action:manipulation}
+.reschedule-day-btn{padding:10px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;transition:all var(--tr);text-align:left;touch-action:manipulation}
 .reschedule-day-btn:hover{background:var(--purple-lt);border-color:var(--purple);color:var(--purple)}
 .reschedule-day-btn.today-option{border-color:var(--purple);background:var(--purple-lt)}
 .reschedule-day-btn .rday-name{font-weight:600;display:block}
 .reschedule-day-btn .rday-date{font-size:10px;color:var(--text3)}
 
 /* BURNOUT */
-.burnout-modal{position:fixed;inset:0;z-index:600;
-  display:flex;align-items:center;justify-content:center;padding:24px;
-  background:rgba(10,8,24,.5);backdrop-filter:blur(3px);
-  opacity:0;pointer-events:none;transition:opacity .25s ease}
+.burnout-modal{position:fixed;inset:0;z-index:600;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(10,8,24,.5);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .25s ease}
 .burnout-modal.open{opacity:1;pointer-events:all}
-.burnout-box{background:var(--bg2);border-radius:var(--radius);padding:24px 20px;
-  max-width:320px;width:100%;text-align:center;
-  transform:scale(.92);transition:transform .25s cubic-bezier(.4,0,.2,1);box-shadow:var(--shadow-md)}
+.burnout-box{background:var(--bg2);border-radius:var(--radius);padding:24px 20px;max-width:320px;width:100%;text-align:center;transform:scale(.92);transition:transform .25s cubic-bezier(.4,0,.2,1);box-shadow:var(--shadow-md)}
 .burnout-modal.open .burnout-box{transform:scale(1)}
 .burnout-emoji{font-size:40px;margin-bottom:10px;display:block}
 .burnout-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px}
 .burnout-text{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:18px}
 .burnout-actions{display:flex;gap:8px}
-.burnout-cancel{flex:1;padding:10px;background:var(--bg);border:1.5px solid var(--border);
-  border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;font-size:13px;font-weight:500;
-  color:var(--text2);cursor:pointer;transition:all var(--tr);touch-action:manipulation}
+.burnout-cancel{flex:1;padding:10px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;transition:all var(--tr);touch-action:manipulation}
 .burnout-cancel:hover{background:var(--bg3)}
-.burnout-confirm{flex:1;padding:10px;background:var(--purple);border:none;
-  border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;font-size:13px;font-weight:700;
-  color:#fff;cursor:pointer;transition:background var(--tr);touch-action:manipulation}
+.burnout-confirm{flex:1;padding:10px;background:var(--purple);border:none;border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;font-size:13px;font-weight:700;color:#fff;cursor:pointer;transition:background var(--tr);touch-action:manipulation}
 .burnout-confirm:hover{background:var(--purple2)}
 
 /* TOAST */
-.toast{position:fixed;bottom:calc(var(--footer-h) + 12px + env(safe-area-inset-bottom,0px));
-  left:50%;transform:translateX(-50%) translateY(12px);
-  background:var(--text);color:#fff;padding:9px 18px;border-radius:50px;
-  font-size:12px;font-weight:500;opacity:0;
-  transition:opacity .25s ease,transform .25s ease;
-  pointer-events:none;z-index:700;white-space:nowrap;max-width:90vw;text-align:center}
+.toast{position:fixed;bottom:calc(var(--footer-h) + 12px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%) translateY(12px);background:var(--text);color:#fff;padding:9px 18px;border-radius:50px;font-size:12px;font-weight:500;opacity:0;transition:opacity .25s ease,transform .25s ease;pointer-events:none;z-index:700;white-space:nowrap;max-width:90vw;text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* FOOTER */
-.footer-nav{position:fixed;bottom:0;left:0;right:0;
-  height:calc(var(--footer-h) + env(safe-area-inset-bottom,0px));
-  padding-bottom:env(safe-area-inset-bottom,0px);
-  background:var(--bg2);border-top:1px solid var(--border);
-  display:flex;align-items:stretch;z-index:200;
-  box-shadow:0 -4px 16px rgba(103,65,217,.08)}
-.footer-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:3px;padding:6px 4px;background:none;border:none;cursor:pointer;
-  font-family:"Poppins",sans-serif;font-size:10px;font-weight:500;color:var(--text3);
-  transition:all var(--tr);touch-action:manipulation;position:relative}
+.footer-nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--footer-h) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);background:var(--bg2);border-top:1px solid var(--border);display:flex;align-items:stretch;z-index:200;box-shadow:0 -4px 16px rgba(103,65,217,.08)}
+.footer-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 4px;background:none;border:none;cursor:pointer;font-family:"Poppins",sans-serif;font-size:10px;font-weight:500;color:var(--text3);transition:all var(--tr);touch-action:manipulation;position:relative}
 .footer-tab:hover{color:var(--purple);background:var(--purple-xlt)}
 .footer-tab.active{color:var(--purple)}
-.footer-tab.active::after{content:"";position:absolute;top:0;left:20%;right:20%;height:2px;
-  background:var(--purple);border-radius:0 0 3px 3px}
+.footer-tab.active::after{content:"";position:absolute;top:0;left:20%;right:20%;height:2px;background:var(--purple);border-radius:0 0 3px 3px}
 .footer-tab svg{transition:transform .15s ease}
 .footer-tab.active svg{transform:scale(1.12)}
-.tab-badge{position:absolute;top:6px;right:calc(50% - 18px);
-  background:var(--over);color:#fff;font-size:9px;font-weight:700;
-  min-width:16px;height:16px;border-radius:50px;
-  display:flex;align-items:center;justify-content:center;padding:0 3px}
+.tab-badge{position:absolute;top:6px;right:calc(50% - 18px);background:var(--over);color:#fff;font-size:9px;font-weight:700;min-width:16px;height:16px;border-radius:50px;display:flex;align-items:center;justify-content:center;padding:0 3px}
 
 @media(max-width:600px){.week-grid{grid-template-columns:1fr;padding:10px;gap:10px}}
 </style>
 </head>
 <body>
 
-<!-- ═══ TELA DE LOGIN/CADASTRO ═══ -->
 <div class="auth-screen" id="auth-screen">
   <div class="auth-box">
     <p class="auth-ornament">✦ ✧ ✦</p>
     <h1 class="auth-title">Agenda de Tarot</h1>
     <p class="auth-subtitle">Faça login para acessar sua agenda</p>
-
     <div class="auth-tabs">
       <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Entrar</button>
       <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">Cadastrar</button>
     </div>
-
     <div class="auth-error" id="auth-error"></div>
     <div class="auth-success" id="auth-success"></div>
-
     <div class="auth-field">
       <label>E-mail</label>
-      <input type="email" id="auth-email" placeholder="seu@email.com"
-             onkeydown="if(event.key==='Enter')handleAuthSubmit()" autocomplete="email" />
+      <input type="email" id="auth-email" placeholder="seu@email.com" onkeydown="if(event.key==='Enter')handleAuthSubmit()" autocomplete="email" />
     </div>
     <div class="auth-field">
       <label>Senha</label>
-      <input type="password" id="auth-password" placeholder="Sua senha"
-             onkeydown="if(event.key==='Enter')handleAuthSubmit()" autocomplete="current-password" />
+      <input type="password" id="auth-password" placeholder="Sua senha" onkeydown="if(event.key==='Enter')handleAuthSubmit()" autocomplete="current-password" />
     </div>
-
     <button class="auth-btn" id="auth-submit-btn" onclick="handleAuthSubmit()">Entrar</button>
   </div>
 </div>
 
-<!-- ═══ LOADING ═══ -->
 <div class="loading-overlay" id="loading-overlay">
   <div class="loading-spinner"></div>
-  <div class="loading-text" id="loading-text">Verificando sessão…</div>
-  <button class="loading-retry" id="loading-retry" onclick="retryInit()">Tentar novamente</button>
+  <div class="loading-text" id="loading-text">Carregando…</div>
+  <button class="loading-retry" id="loading-retry" onclick="retryLoad()">Tentar novamente</button>
 </div>
 
 <div class="sync-indicator" id="sync-indicator">
@@ -447,20 +295,14 @@ body{background:var(--bg);color:var(--text);font-family:"Poppins",sans-serif;fon
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div class="sidebar-title">
-      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z"/>
-        <path d="M12 6v6l4 2"/>
-      </svg>
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z"/><path d="M12 6v6l4 2"/></svg>
       Menu
     </div>
     <button class="sidebar-close" onclick="closeSidebar()">✕</button>
   </div>
   <div class="sidebar-body">
     <div class="sb-section">
-      <div class="sb-section-title">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-        Visão Mensal
-      </div>
+      <div class="sb-section-title"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Visão Mensal</div>
       <div class="mini-cal">
         <div class="mini-cal-header">
           <button class="mini-cal-nav" onclick="changeCalMonth(-1)">‹</button>
@@ -471,15 +313,10 @@ body{background:var(--bg);color:var(--text);font-family:"Poppins",sans-serif;fon
       </div>
     </div>
     <div class="sb-section">
-      <div class="sb-section-title">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        Buscar Consulente
-      </div>
+      <div class="sb-section-title"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Buscar Consulente</div>
       <div class="search-input-wrap">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" class="sb-search-input" id="sb-search"
-               placeholder="Nome da consulente…" autocomplete="off"
-               oninput="searchConsultant(this.value)" />
+        <input type="text" class="sb-search-input" id="sb-search" placeholder="Nome da consulente…" autocomplete="off" oninput="searchConsultant(this.value)" />
       </div>
       <div class="search-results" id="search-results"></div>
       <div class="notes-area-wrap" id="notes-area-wrap">
@@ -489,39 +326,26 @@ body{background:var(--bg);color:var(--text);font-family:"Poppins",sans-serif;fon
       </div>
     </div>
     <div class="sb-section">
-      <div class="sb-section-title">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-        Atalhos Rápidos
-      </div>
+      <div class="sb-section-title"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>Atalhos Rápidos</div>
       <div class="sb-shortcuts">
-        <button class="sb-shortcut-btn" onclick="applyFilter('today');closeSidebar()">
-          <span class="dot" style="background:var(--purple)"></span>Leituras de Hoje
-        </button>
-        <button class="sb-shortcut-btn" onclick="applyFilter('late');closeSidebar()">
-          <span class="dot" style="background:var(--over)"></span>Leituras Atrasadas
-        </button>
-        <button class="sb-shortcut-btn" onclick="applyFilter('tomorrow');closeSidebar()">
-          <span class="dot" style="background:var(--ok)"></span>Leituras de Amanhã
-        </button>
-        <button class="sb-shortcut-btn" onclick="doLogout()">
-          <span class="dot" style="background:var(--over)"></span>Sair da conta
-        </button>
+        <button class="sb-shortcut-btn" onclick="applyFilter('today');closeSidebar()"><span class="dot" style="background:var(--purple)"></span>Leituras de Hoje</button>
+        <button class="sb-shortcut-btn" onclick="applyFilter('late');closeSidebar()"><span class="dot" style="background:var(--over)"></span>Leituras Atrasadas</button>
+        <button class="sb-shortcut-btn" onclick="applyFilter('tomorrow');closeSidebar()"><span class="dot" style="background:var(--ok)"></span>Leituras de Amanhã</button>
+        <button class="sb-shortcut-btn" onclick="doLogout()"><span class="dot" style="background:var(--over)"></span>Sair da conta</button>
       </div>
     </div>
   </div>
 </aside>
 
 <header class="app-header">
-  <button class="hamburger-btn" onclick="openSidebar()" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
+  <button class="hamburger-btn" onclick="openSidebar()" aria-label="Menu"><span></span><span></span><span></span></button>
   <div class="header-center">
     <p class="header-ornament">✦ ✧ ✦</p>
     <h1 class="app-title">Agenda de Tarot</h1>
-    <p class="app-subtitle" id="app-subtitle">Gerenciamento de Consultas</p>
+    <p class="app-subtitle">Gerenciamento de Consultas</p>
   </div>
   <div class="user-bar">
-    <button class="logout-btn" onclick="doLogout()" title="Sair">Sair</button>
+    <button class="logout-btn" onclick="doLogout()">Sair</button>
   </div>
 </header>
 
@@ -560,10 +384,7 @@ body{background:var(--bg);color:var(--text);font-family:"Poppins",sans-serif;fon
   </button>
   <button class="footer-tab" id="tab-late" onclick="applyFilter('late')">
     <span class="tab-badge" id="late-badge" style="display:none">0</span>
-    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-      <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-      <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-    </svg>
+    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
     <span class="footer-tab-label">Atrasadas</span>
   </button>
   <button class="footer-tab" id="tab-tomorrow" onclick="applyFilter('tomorrow')">
@@ -613,8 +434,6 @@ let rescheduleTarget = null;
 let selectedConsultant = null;
 let isProcessing = false;
 let currentAuthTab = 'login';
-
-// ── FLAG CRÍTICA: evita que enterApp() rode mais de uma vez simultaneamente ──
 let appStarted = false;
 
 const DAYS_PT    = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
@@ -622,200 +441,139 @@ const DAYS_ABBR  = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 const MONTHS_PT  = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
 const MONTHS_FULL= ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
-/* ═══ HELPERS DATA ═══ */
+/* ═══ HELPERS ═══ */
 function getThisWeekMonday() {
-  const d = new Date(); d.setHours(0,0,0,0);
-  const day = d.getDay();
-  d.setDate(d.getDate() + (day===0 ? -6 : 1-day));
-  return d;
+  const d=new Date(); d.setHours(0,0,0,0);
+  const day=d.getDay(); d.setDate(d.getDate()+(day===0?-6:1-day)); return d;
 }
-function dateKey(date) {
-  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
-}
-function todayKey()    { return dateKey(new Date()); }
+function dateKey(date) { return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`; }
+function todayKey() { return dateKey(new Date()); }
 function tomorrowKey() { const d=new Date(); d.setDate(d.getDate()+1); return dateKey(d); }
-function isToday(date) {
-  const t=new Date();
-  return date.getDate()===t.getDate()&&date.getMonth()===t.getMonth()&&date.getFullYear()===t.getFullYear();
-}
-function isPast(date) {
-  const t=new Date(); t.setHours(0,0,0,0);
-  const d=new Date(date); d.setHours(0,0,0,0); return d<t;
-}
+function isToday(date) { const t=new Date(); return date.getDate()===t.getDate()&&date.getMonth()===t.getMonth()&&date.getFullYear()===t.getFullYear(); }
+function isPast(date) { const t=new Date(); t.setHours(0,0,0,0); const d=new Date(date); d.setHours(0,0,0,0); return d<t; }
 function formatDateShort(date) { return `${DAYS_ABBR[date.getDay()]}, ${date.getDate()} ${MONTHS_PT[date.getMonth()]}`; }
-function getWeekDates() {
-  return Array.from({length:7},(_,i)=>{ const d=new Date(currentWeekStart); d.setDate(d.getDate()+i); return d; });
-}
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function focusName(key) {
-  requestAnimationFrame(()=>{ const el=document.getElementById(`name-${key}`); if(el)el.focus(); });
-}
+function getWeekDates() { return Array.from({length:7},(_,i)=>{ const d=new Date(currentWeekStart); d.setDate(d.getDate()+i); return d; }); }
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function focusName(key) { requestAnimationFrame(()=>{ const el=document.getElementById(`name-${key}`); if(el)el.focus(); }); }
 
 /* ═══ SYNC UI ═══ */
 let syncTimer=null;
 function showSync(state,msg) {
-  const ind=document.getElementById('sync-indicator');
-  const dot=document.getElementById('sync-dot');
-  const text=document.getElementById('sync-text');
+  const ind=document.getElementById('sync-indicator'),dot=document.getElementById('sync-dot'),text=document.getElementById('sync-text');
   clearTimeout(syncTimer);
   dot.className='sync-dot'+(state==='syncing'?' syncing':state==='error'?' error':'');
   text.textContent=msg; ind.classList.add('visible');
   if(state==='ok') syncTimer=setTimeout(()=>ind.classList.remove('visible'),2500);
 }
 
-/* ═══ LIMIT / NOTES (localStorage) ═══ */
-const NOTES_KEY='tarot_notes_2026';
-const LIMIT_KEY='tarot_daily_limit_2026';
-// localStorage só como cache rápido; fonte da verdade é o Supabase
-function loadLimit()   { const v=parseInt(localStorage.getItem(LIMIT_KEY)); return isNaN(v)?6:v; }
-function saveLimit(v)  { localStorage.setItem(LIMIT_KEY,String(v)); }
-function loadNotes()   { try{return JSON.parse(localStorage.getItem(NOTES_KEY))||{};}catch{return{};} }
+/* ═══ LOADING ═══ */
+function showLoading(msg) {
+  const el=document.getElementById('loading-overlay');
+  document.getElementById('loading-text').textContent=msg||'Carregando…';
+  document.getElementById('loading-retry').classList.remove('show');
+  el.classList.add('visible');
+}
+function hideLoading() {
+  const el=document.getElementById('loading-overlay');
+  el.classList.remove('visible');
+}
+
+/* ═══ LIMIT / NOTES ═══ */
+const NOTES_KEY='tarot_notes_2026', LIMIT_KEY='tarot_daily_limit_2026';
+function loadLimit() { const v=parseInt(localStorage.getItem(LIMIT_KEY)); return isNaN(v)?6:v; }
+function saveLimit(v) { localStorage.setItem(LIMIT_KEY,String(v)); }
+function loadNotes() { try{return JSON.parse(localStorage.getItem(NOTES_KEY))||{};}catch{return{};} }
 function saveNotes2(n) { localStorage.setItem(NOTES_KEY,JSON.stringify(n)); }
 
 async function fetchLimitFromDB() {
   try {
-    const { data, error } = await sb.from('configuracoes_tarot')
-      .select('valor').eq('chave','limite_diario').eq('user_id', currentUser.id).single();
-    if (error || !data) return null;
+    const { data,error }=await sb.from('configuracoes_tarot').select('valor').eq('chave','limite_diario').eq('user_id',currentUser.id).single();
+    if(error||!data) return null;
     return parseInt(data.valor);
   } catch(e) { return null; }
 }
-
 async function saveLimitToDB(v) {
   try {
-    await sb.from('configuracoes_tarot').upsert(
-      { chave:'limite_diario', valor: String(v), user_id: currentUser.id },
-      { onConflict: 'chave,user_id' }
-    );
-  } catch(e) { console.warn('saveLimitToDB:', e); }
-}
-
-/* ═══ LOADING OVERLAY ═══ */
-function showLoading(msg) {
-  const overlay = document.getElementById('loading-overlay');
-  document.getElementById('loading-text').textContent = msg || 'Carregando…';
-  document.getElementById('loading-retry').classList.remove('show');
-  overlay.style.display = 'flex';
-  overlay.style.opacity = '1';
-  overlay.style.pointerEvents = 'all';
-}
-function hideLoading() {
-  const overlay = document.getElementById('loading-overlay');
-  overlay.style.opacity = '0';
-  overlay.style.pointerEvents = 'none';
-  setTimeout(() => { overlay.style.display = 'none'; }, 350);
+    await sb.from('configuracoes_tarot').upsert({chave:'limite_diario',valor:String(v),user_id:currentUser.id},{onConflict:'chave,user_id'});
+  } catch(e) { console.warn('saveLimitToDB:',e); }
 }
 
 /* ═══ AUTH UI ═══ */
 function switchAuthTab(tab) {
-  currentAuthTab = tab;
-  document.getElementById('tab-login').classList.toggle('active', tab==='login');
-  document.getElementById('tab-signup').classList.toggle('active', tab==='signup');
-  document.getElementById('auth-submit-btn').textContent = tab==='login' ? 'Entrar' : 'Criar conta';
+  currentAuthTab=tab;
+  document.getElementById('tab-login').classList.toggle('active',tab==='login');
+  document.getElementById('tab-signup').classList.toggle('active',tab==='signup');
+  document.getElementById('auth-submit-btn').textContent=tab==='login'?'Entrar':'Criar conta';
   document.getElementById('auth-error').classList.remove('show');
   document.getElementById('auth-success').classList.remove('show');
 }
-
-function setAuthError(msg) {
-  const el=document.getElementById('auth-error');
-  el.textContent=msg; el.classList.add('show');
-  document.getElementById('auth-success').classList.remove('show');
-}
-function setAuthSuccess(msg) {
-  const el=document.getElementById('auth-success');
-  el.textContent=msg; el.classList.add('show');
-  document.getElementById('auth-error').classList.remove('show');
-}
+function setAuthError(msg) { const el=document.getElementById('auth-error'); el.textContent=msg; el.classList.add('show'); document.getElementById('auth-success').classList.remove('show'); }
+function setAuthSuccess(msg) { const el=document.getElementById('auth-success'); el.textContent=msg; el.classList.add('show'); document.getElementById('auth-error').classList.remove('show'); }
 
 async function handleAuthSubmit() {
-  const email    = document.getElementById('auth-email').value.trim();
-  const password = document.getElementById('auth-password').value;
-  const btn      = document.getElementById('auth-submit-btn');
-
-  if (!email || !password) { setAuthError('Preencha e-mail e senha.'); return; }
-  if (password.length < 6) { setAuthError('A senha deve ter pelo menos 6 caracteres.'); return; }
-
-  btn.disabled = true;
-  btn.textContent = currentAuthTab==='login' ? 'Entrando…' : 'Criando conta…';
+  const email=document.getElementById('auth-email').value.trim();
+  const password=document.getElementById('auth-password').value;
+  const btn=document.getElementById('auth-submit-btn');
+  if(!email||!password){setAuthError('Preencha e-mail e senha.');return;}
+  if(password.length<6){setAuthError('A senha deve ter pelo menos 6 caracteres.');return;}
+  btn.disabled=true;
+  btn.textContent=currentAuthTab==='login'?'Entrando…':'Criando conta…';
   document.getElementById('auth-error').classList.remove('show');
   document.getElementById('auth-success').classList.remove('show');
-
   try {
-    if (currentAuthTab === 'login') {
-      const { data, error } = await sb.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      // enterApp() será chamado diretamente aqui — NÃO pelo onAuthStateChange
-      if (data.user) {
-        await enterApp(data.user);
-      }
+    if(currentAuthTab==='login') {
+      const { data,error }=await sb.auth.signInWithPassword({email,password});
+      if(error) throw error;
+      if(data.user) await enterApp(data.user);
     } else {
-      const { data, error } = await sb.auth.signUp({ email, password });
-      if (error) throw error;
+      const { error }=await sb.auth.signUp({email,password});
+      if(error) throw error;
       setAuthSuccess('Conta criada! Verifique seu e-mail para confirmar antes de entrar.');
-      btn.disabled = false;
-      btn.textContent = 'Criar conta';
+      btn.disabled=false; btn.textContent='Criar conta';
     }
   } catch(e) {
-    const msgs = {
-      'Invalid login credentials': 'E-mail ou senha incorretos.',
-      'Email not confirmed': 'Confirme seu e-mail antes de entrar.',
-      'User already registered': 'Este e-mail já está cadastrado.',
-    };
-    setAuthError(msgs[e.message] || e.message);
-    btn.disabled = false;
-    btn.textContent = currentAuthTab==='login' ? 'Entrar' : 'Criar conta';
+    const msgs={'Invalid login credentials':'E-mail ou senha incorretos.','Email not confirmed':'Confirme seu e-mail antes de entrar.','User already registered':'Este e-mail já está cadastrado.'};
+    setAuthError(msgs[e.message]||e.message);
+    btn.disabled=false; btn.textContent=currentAuthTab==='login'?'Entrar':'Criar conta';
   }
 }
 
 async function doLogout() {
-  appStarted = false;
-  currentUser = null;
-  localCache = {};
-  try { await sb.auth.signOut(); } catch(_) {}
+  appStarted=false; currentUser=null; localCache={};
+  try{await sb.auth.signOut();}catch(_){}
   showAuthScreen();
 }
 
 function showAuthScreen() {
   hideLoading();
-  const screen = document.getElementById('auth-screen');
-  screen.classList.add('visible');
-  screen.classList.remove('hidden');
-  document.getElementById('auth-email').value = '';
-  document.getElementById('auth-password').value = '';
+  document.getElementById('auth-screen').classList.add('visible');
+  document.getElementById('auth-email').value='';
+  document.getElementById('auth-password').value='';
   document.getElementById('auth-error').classList.remove('show');
   document.getElementById('auth-success').classList.remove('show');
-  document.getElementById('auth-submit-btn').disabled = false;
-  document.getElementById('auth-submit-btn').textContent = 'Entrar';
+  document.getElementById('auth-submit-btn').disabled=false;
+  document.getElementById('auth-submit-btn').textContent='Entrar';
   switchAuthTab('login');
 }
 
 async function enterApp(user) {
-  // Proteção: nunca inicializa duas vezes
-  if (appStarted) return;
-  appStarted = true;
-
-  currentUser = user;
-  const screen = document.getElementById('auth-screen');
-  screen.classList.remove('visible');
-  screen.classList.add('hidden');
+  if(appStarted) return;
+  appStarted=true;
+  currentUser=user;
+  document.getElementById('auth-screen').classList.remove('visible');
   showLoading('Carregando agenda…');
+  currentWeekStart=getThisWeekMonday();
 
-  currentWeekStart = getThisWeekMonday();
+  // Carrega limite da nuvem
+  const cloudLimit=await fetchLimitFromDB();
+  if(cloudLimit!==null) saveLimit(cloudLimit);
+  document.getElementById('limit-display').textContent=loadLimit();
 
-  // Carrega limite da nuvem (fallback para localStorage se falhar)
-  const cloudLimit = await fetchLimitFromDB();
-  if (cloudLimit !== null) {
-    saveLimit(cloudLimit); // sincroniza cache local
-  }
-  document.getElementById('limit-display').textContent = loadLimit();
-
-  // Timeout de segurança — 12s
-  const safetyTimer = setTimeout(() => {
-    document.getElementById('loading-text').textContent = 'Demorando mais que o esperado…';
+  // Safety timeout 15s
+  const safetyTimer=setTimeout(()=>{
+    document.getElementById('loading-text').textContent='Demorando mais que o esperado…';
     document.getElementById('loading-retry').classList.add('show');
-  }, 12000);
+  },15000);
 
   try {
     await renderWeek();
@@ -823,138 +581,94 @@ async function enterApp(user) {
     hideLoading();
   } catch(e) {
     clearTimeout(safetyTimer);
-    console.error('enterApp error:', e);
-    document.getElementById('loading-text').textContent = 'Erro ao carregar. Tente novamente.';
+    console.error('enterApp:',e);
+    document.getElementById('loading-text').textContent='Erro ao carregar.';
     document.getElementById('loading-retry').classList.add('show');
   }
 }
 
-/* ═══ SUPABASE DB ═══ */
+async function retryLoad() {
+  document.getElementById('loading-retry').classList.remove('show');
+  showLoading('Recarregando…');
+  try { await renderWeek(); hideLoading(); }
+  catch(e) { document.getElementById('loading-text').textContent='Erro ao carregar.'; document.getElementById('loading-retry').classList.add('show'); }
+}
+
+/* ═══ DB ═══ */
 async function loadWeekData(dates) {
-  const keys = dates.map(d=>dateKey(d));
+  const keys=dates.map(d=>dateKey(d));
   showSync('syncing','Carregando…');
   try {
-    const { data, error } = await sb.from(TABLE).select('*')
-      .in('data_agendamento', keys)
-      .order('criado_em', { ascending: true });
-    if (error) throw error;
-    keys.forEach(k=>{ localCache[k]=[]; });
-    (data||[]).forEach(row=>{
-      if(!localCache[row.data_agendamento]) localCache[row.data_agendamento]=[];
-      localCache[row.data_agendamento].push(row);
-    });
-    showSync('ok','Atualizado');
-    return true;
-  } catch(e) {
-    showSync('error','Erro de conexão');
-    console.error('loadWeekData:',e);
-    return false;
-  }
+    const { data,error }=await sb.from(TABLE).select('*').in('data_agendamento',keys).order('criado_em',{ascending:true});
+    if(error) throw error;
+    keys.forEach(k=>{localCache[k]=[];});
+    (data||[]).forEach(row=>{ if(!localCache[row.data_agendamento]) localCache[row.data_agendamento]=[]; localCache[row.data_agendamento].push(row); });
+    showSync('ok','Atualizado'); return true;
+  } catch(e) { showSync('error','Erro de conexão'); console.error('loadWeekData:',e); return false; }
 }
-
-async function dbAdd(key, name, questions) {
+async function dbAdd(key,name,questions) {
   showSync('syncing','Salvando…');
   try {
-    const { data, error } = await sb.from(TABLE).insert({
-      data_agendamento: key,
-      nome_cliente:     name,
-      perguntas:        questions||null,
-      concluido:        false,
-      user_id:          currentUser.id
-    }).select().single();
-    if (error) throw error;
+    const { data,error }=await sb.from(TABLE).insert({data_agendamento:key,nome_cliente:name,perguntas:questions||null,concluido:false,user_id:currentUser.id}).select().single();
+    if(error) throw error;
     if(!localCache[key]) localCache[key]=[];
-    localCache[key].push(data);
-    showSync('ok','Salvo!');
-    return data;
-  } catch(e) {
-    showSync('error','Erro ao salvar');
-    console.error('dbAdd:',e);
-    return null;
-  }
+    localCache[key].push(data); showSync('ok','Salvo!'); return data;
+  } catch(e) { showSync('error','Erro ao salvar'); console.error('dbAdd:',e); return null; }
 }
-
-async function dbRemove(key, id) {
-  const numId=Number(id);
-  showSync('syncing','Removendo…');
+async function dbRemove(key,id) {
+  const numId=Number(id); showSync('syncing','Removendo…');
   try {
-    const { error } = await sb.from(TABLE).delete().eq('id',numId);
+    const { error }=await sb.from(TABLE).delete().eq('id',numId);
     if(error) throw error;
     if(localCache[key]) localCache[key]=localCache[key].filter(r=>Number(r.id)!==numId);
-    showSync('ok','Removido');
-    return true;
-  } catch(e) {
-    showSync('error','Erro ao remover');
-    console.error('dbRemove:',e);
-    return false;
-  }
+    showSync('ok','Removido'); return true;
+  } catch(e) { showSync('error','Erro ao remover'); console.error('dbRemove:',e); return false; }
 }
-
-async function dbToggleDone(key, id) {
+async function dbToggleDone(key,id) {
   const numId=Number(id);
   if(!localCache[key]) return false;
   const rowIndex=localCache[key].findIndex(r=>Number(r.id)===numId);
   if(rowIndex===-1) return false;
-  const row=localCache[key][rowIndex];
-  const newDone=!row.concluido;
-  showSync('syncing', newDone?'Concluindo…':'Reabrindo…');
+  const row=localCache[key][rowIndex]; const newDone=!row.concluido;
+  showSync('syncing',newDone?'Concluindo…':'Reabrindo…');
   try {
-    const { error } = await sb.from(TABLE).update({ concluido:newDone }).eq('id',numId);
+    const { error }=await sb.from(TABLE).update({concluido:newDone}).eq('id',numId);
     if(error) throw error;
-    localCache[key][rowIndex]={...row, concluido:newDone};
-    showSync('ok', newDone?'Concluído!':'Reaberto!');
-    return true;
-  } catch(e) {
-    showSync('error','Erro ao atualizar');
-    console.error('dbToggleDone:',e);
-    return false;
-  }
+    localCache[key][rowIndex]={...row,concluido:newDone}; showSync('ok',newDone?'Concluído!':'Reaberto!'); return true;
+  } catch(e) { showSync('error','Erro ao atualizar'); console.error('dbToggleDone:',e); return false; }
 }
-
-async function dbReschedule(fromKey, id, toKey) {
-  const numId=Number(id);
-  showSync('syncing','Remarcando…');
+async function dbReschedule(fromKey,id,toKey) {
+  const numId=Number(id); showSync('syncing','Remarcando…');
   try {
-    const { error } = await sb.from(TABLE).update({ data_agendamento:toKey, concluido:false }).eq('id',numId);
+    const { error }=await sb.from(TABLE).update({data_agendamento:toKey,concluido:false}).eq('id',numId);
     if(error) throw error;
     if(localCache[fromKey]) {
       const idx=localCache[fromKey].findIndex(r=>Number(r.id)===numId);
       if(idx!==-1) {
-        const updated={...localCache[fromKey][idx], data_agendamento:toKey, concluido:false};
+        const updated={...localCache[fromKey][idx],data_agendamento:toKey,concluido:false};
         localCache[fromKey].splice(idx,1);
         if(!localCache[toKey]) localCache[toKey]=[];
         localCache[toKey].push(updated);
       }
     }
-    showSync('ok','Remarcado!');
-    return true;
-  } catch(e) {
-    showSync('error','Erro ao remarcar');
-    console.error('dbReschedule:',e);
-    return false;
-  }
+    showSync('ok','Remarcado!'); return true;
+  } catch(e) { showSync('error','Erro ao remarcar'); console.error('dbReschedule:',e); return false; }
 }
 
 /* ═══ SIDEBAR ═══ */
-function openSidebar()  { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebar-overlay').classList.add('open'); renderMiniCal(); }
+function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebar-overlay').classList.add('open'); renderMiniCal(); }
 function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.remove('open'); }
-
 function changeCalMonth(dir) { calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+dir,1); renderMiniCal(); }
 function renderMiniCal() {
-  const year=calMonth.getFullYear(), month=calMonth.getMonth();
+  const year=calMonth.getFullYear(),month=calMonth.getMonth();
   document.getElementById('mini-cal-title').textContent=`${MONTHS_FULL[month]} ${year}`;
   const grid=document.getElementById('mini-cal-grid'); grid.innerHTML='';
-  ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'].forEach(d=>{
-    const el=document.createElement('div'); el.className='mini-cal-dow'; el.textContent=d; grid.appendChild(el);
-  });
-  const firstDay=new Date(year,month,1);
-  let startDow=firstDay.getDay(); startDow=startDow===0?6:startDow-1;
+  ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'].forEach(d=>{ const el=document.createElement('div'); el.className='mini-cal-dow'; el.textContent=d; grid.appendChild(el); });
+  const firstDay=new Date(year,month,1); let startDow=firstDay.getDay(); startDow=startDow===0?6:startDow-1;
   for(let i=0;i<startDow;i++){const el=document.createElement('div');el.className='mini-cal-day empty';grid.appendChild(el);}
-  const daysInMonth=new Date(year,month+1,0).getDate();
-  const todayObj=new Date(); todayObj.setHours(0,0,0,0);
+  const daysInMonth=new Date(year,month+1,0).getDate(); const todayObj=new Date(); todayObj.setHours(0,0,0,0);
   for(let d=1;d<=daysInMonth;d++){
-    const date=new Date(year,month,d); const key=dateKey(date);
-    const el=document.createElement('div');
+    const date=new Date(year,month,d); const key=dateKey(date); const el=document.createElement('div');
     el.className='mini-cal-day'+(date.getTime()===todayObj.getTime()?' today':'')+(localCache[key]&&localCache[key].length>0?' has-appt':'');
     el.textContent=d;
     el.onclick=()=>{ const mon=new Date(date);const dow=mon.getDay();mon.setDate(mon.getDate()-(dow===0?6:dow-1));currentWeekStart=mon;closeSidebar();renderWeek(); };
@@ -964,32 +678,20 @@ function renderMiniCal() {
 
 /* ═══ BUSCA ═══ */
 async function searchConsultant(query) {
-  const results=document.getElementById('search-results');
-  const notesWrap=document.getElementById('notes-area-wrap');
+  const results=document.getElementById('search-results'),notesWrap=document.getElementById('notes-area-wrap');
   results.innerHTML=''; notesWrap.classList.remove('visible'); selectedConsultant=null;
   if(!query.trim()) return;
   try {
     const { data }=await sb.from(TABLE).select('nome_cliente,data_agendamento').ilike('nome_cliente',`%${query}%`);
     const found={};
-    (data||[]).forEach(row=>{
-      const n=row.nome_cliente;
-      if(!found[n]) found[n]={count:0,lastKey:row.data_agendamento};
-      found[n].count++;
-      if(row.data_agendamento>found[n].lastKey) found[n].lastKey=row.data_agendamento;
-    });
+    (data||[]).forEach(row=>{ const n=row.nome_cliente; if(!found[n]) found[n]={count:0,lastKey:row.data_agendamento}; found[n].count++; if(row.data_agendamento>found[n].lastKey) found[n].lastKey=row.data_agendamento; });
     const names=Object.keys(found);
     if(!names.length){results.innerHTML=`<div style="font-size:11px;color:var(--text3);padding:6px 0">Nenhuma encontrada</div>`;return;}
-    names.forEach(name=>{
-      const info=found[name]; const div=document.createElement('div');
-      div.className='search-result-item';
-      div.innerHTML=`<span>${escHtml(name)}</span><span class="search-result-meta">${info.count}x · ${info.lastKey}</span>`;
-      div.onclick=()=>selectConsultant(name); results.appendChild(div);
-    });
+    names.forEach(name=>{ const info=found[name]; const div=document.createElement('div'); div.className='search-result-item'; div.innerHTML=`<span>${escHtml(name)}</span><span class="search-result-meta">${info.count}x · ${info.lastKey}</span>`; div.onclick=()=>selectConsultant(name); results.appendChild(div); });
   } catch(e){console.error(e);}
 }
 function selectConsultant(name) {
-  selectedConsultant=name;
-  const notes=loadNotes();
+  selectedConsultant=name; const notes=loadNotes();
   document.getElementById('notes-client-label').textContent=`Anotações — ${name}`;
   document.getElementById('notes-textarea').value=notes[name]||'';
   document.getElementById('notes-area-wrap').classList.add('visible');
@@ -1004,10 +706,8 @@ function saveNotes() {
 /* ═══ STEPPERS ═══ */
 function changeLimit(delta) {
   let v=loadLimit()+delta; if(v<1)v=1; if(v>99)v=99;
-  saveLimit(v);
-  document.getElementById('limit-display').textContent=v;
-  render();
-  saveLimitToDB(v); // salva na nuvem em background
+  saveLimit(v); document.getElementById('limit-display').textContent=v; render();
+  saveLimitToDB(v);
 }
 function changeQ(key,delta) {
   const el=document.getElementById(`qval-${key}`); if(!el) return;
@@ -1015,65 +715,42 @@ function changeQ(key,delta) {
 }
 
 /* ═══ NAVEGAÇÃO ═══ */
-async function changeWeek(dir) {
-  currentWeekStart=new Date(currentWeekStart);
-  currentWeekStart.setDate(currentWeekStart.getDate()+dir*7);
-  await renderWeek();
-}
+async function changeWeek(dir) { currentWeekStart=new Date(currentWeekStart); currentWeekStart.setDate(currentWeekStart.getDate()+dir*7); await renderWeek(); }
 async function goToCurrentWeek() { currentWeekStart=getThisWeekMonday(); await renderWeek(); }
-function applyFilter(type) {
-  activeFilter=type;
-  if(['today','tomorrow','late'].includes(type)) currentWeekStart=getThisWeekMonday();
-  render();
-}
+function applyFilter(type) { activeFilter=type; if(['today','tomorrow','late'].includes(type)) currentWeekStart=getThisWeekMonday(); render(); }
 function clearFilter() { activeFilter=null; render(); }
 
-/* ═══ ADD CLIENT ═══ */
+/* ═══ ADD ═══ */
 async function addClient(key) {
   if(isProcessing) return;
-  const nEl=document.getElementById(`name-${key}`);
-  const qEl=document.getElementById(`qval-${key}`);
+  const nEl=document.getElementById(`name-${key}`),qEl=document.getElementById(`qval-${key}`);
   const name=(nEl?.value||'').trim();
-  if(!name){
-    if(nEl){nEl.style.borderColor='var(--over)';setTimeout(()=>nEl.style.borderColor='',1100);nEl.focus();}
-    return;
-  }
+  if(!name){if(nEl){nEl.style.borderColor='var(--over)';setTimeout(()=>nEl.style.borderColor='',1100);nEl.focus();}return;}
   const qty=qEl?parseInt(qEl.textContent):null;
-  const limit=loadLimit();
-  const total=(localCache[key]||[]).length;
-  if(total>=limit){ pendingAdd={key,name,questions:qty}; document.getElementById('burnout-modal').classList.add('open'); return; }
+  const limit=loadLimit(),total=(localCache[key]||[]).length;
+  if(total>=limit){pendingAdd={key,name,questions:qty};document.getElementById('burnout-modal').classList.add('open');return;}
   await doAddClient(key,name,qty);
 }
 async function doAddClient(key,name,questions) {
-  isProcessing=true;
-  const row=await dbAdd(key,name,questions);
-  isProcessing=false;
-  if(row){ const nEl=document.getElementById(`name-${key}`); if(nEl)nEl.value=''; render(); focusName(key); }
+  isProcessing=true; const row=await dbAdd(key,name,questions); isProcessing=false;
+  if(row){const nEl=document.getElementById(`name-${key}`);if(nEl)nEl.value='';render();focusName(key);}
 }
 async function closeBurnout(confirm) {
   document.getElementById('burnout-modal').classList.remove('open');
-  if(confirm&&pendingAdd){ const{key,name,questions}=pendingAdd; await doAddClient(key,name,questions); }
+  if(confirm&&pendingAdd){const{key,name,questions}=pendingAdd;await doAddClient(key,name,questions);}
   pendingAdd=null;
 }
 
 /* ═══ REMOVE / TOGGLE ═══ */
 async function removeClient(key,id,btnEl) {
-  if(isProcessing) return;
-  if(btnEl) btnEl.disabled=true;
-  isProcessing=true;
-  const ok=await dbRemove(key,id);
-  isProcessing=false;
-  if(ok){render();focusName(key);}
-  else if(btnEl) btnEl.disabled=false;
+  if(isProcessing) return; if(btnEl) btnEl.disabled=true; isProcessing=true;
+  const ok=await dbRemove(key,id); isProcessing=false;
+  if(ok){render();focusName(key);}else if(btnEl) btnEl.disabled=false;
 }
 async function toggleDone(key,id,btnEl) {
-  if(isProcessing) return;
-  if(btnEl) btnEl.disabled=true;
-  isProcessing=true;
-  const ok=await dbToggleDone(key,id);
-  isProcessing=false;
-  if(ok){render();focusName(key);}
-  else if(btnEl) btnEl.disabled=false;
+  if(isProcessing) return; if(btnEl) btnEl.disabled=true; isProcessing=true;
+  const ok=await dbToggleDone(key,id); isProcessing=false;
+  if(ok){render();focusName(key);}else if(btnEl) btnEl.disabled=false;
 }
 
 /* ═══ REMARCAR ═══ */
@@ -1082,75 +759,48 @@ function openRescheduleModal(fromKey,id,clientName) {
   document.getElementById('reschedule-subtitle').textContent=`Mover "${clientName}" para outro dia desta semana`;
   const container=document.getElementById('reschedule-days'); container.innerHTML='';
   for(let i=0;i<7;i++){
-    const date=new Date(currentWeekStart); date.setDate(date.getDate()+i);
-    const key=dateKey(date); if(key===fromKey) continue;
+    const date=new Date(currentWeekStart);date.setDate(date.getDate()+i);const key=dateKey(date);if(key===fromKey) continue;
     const btn=document.createElement('button');
     btn.className='reschedule-day-btn'+(isToday(date)?' today-option':'');
     btn.innerHTML=`<span class="rday-name">${DAYS_PT[date.getDay()].split('-')[0]}</span><span class="rday-date">${date.getDate()} ${MONTHS_PT[date.getMonth()]}</span>`;
-    btn.onclick=()=>doReschedule(key);
-    container.appendChild(btn);
+    btn.onclick=()=>doReschedule(key); container.appendChild(btn);
   }
   document.getElementById('reschedule-modal').classList.add('open');
 }
-function closeRescheduleModal(e) {
-  if(e&&e.target!==document.getElementById('reschedule-modal')) return;
-  document.getElementById('reschedule-modal').classList.remove('open'); rescheduleTarget=null;
-}
+function closeRescheduleModal(e) { if(e&&e.target!==document.getElementById('reschedule-modal')) return; document.getElementById('reschedule-modal').classList.remove('open'); rescheduleTarget=null; }
 async function doReschedule(toKey) {
   if(!rescheduleTarget||isProcessing) return;
   const{fromKey,id}=rescheduleTarget;
   const row=(localCache[fromKey]||[]).find(r=>Number(r.id)===Number(id));
   const name=row?row.nome_cliente:'';
   document.getElementById('reschedule-modal').classList.remove('open'); rescheduleTarget=null;
-  isProcessing=true;
-  const ok=await dbReschedule(fromKey,id,toKey);
-  isProcessing=false;
+  isProcessing=true; const ok=await dbReschedule(fromKey,id,toKey); isProcessing=false;
   if(ok){render();showToast(`${name} remarcada ✓`);}
 }
 
 /* ═══ TOAST ═══ */
-function showToast(msg) {
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2800);
-}
+function showToast(msg) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
 function handleKeydown(e,key) { if(e.key==='Enter') addClient(key); }
 
-/* ═══ BADGE ATRASADAS ═══ */
-function countLate() {
-  const today=todayKey(); let count=0;
-  Object.entries(localCache).forEach(([key,rows])=>{
-    if(key<today)(rows||[]).forEach(r=>{if(!r.concluido)count++;});
-  });
-  return count;
-}
-function updateLateBadge() {
-  const n=countLate(); const badge=document.getElementById('late-badge');
-  badge.style.display=n>0?'flex':'none'; badge.textContent=n>9?'9+':String(n);
-}
+/* ═══ BADGE ═══ */
+function countLate() { const today=todayKey(); let count=0; Object.entries(localCache).forEach(([key,rows])=>{ if(key<today)(rows||[]).forEach(r=>{if(!r.concluido)count++;}); }); return count; }
+function updateLateBadge() { const n=countLate(); const badge=document.getElementById('late-badge'); badge.style.display=n>0?'flex':'none'; badge.textContent=n>9?'9+':String(n); }
 
 /* ═══ RENDER ═══ */
 function render() {
-  const limit=loadLimit();
-  const tkKey=todayKey(), tmKey=tomorrowKey();
+  const limit=loadLimit(),tkKey=todayKey(),tmKey=tomorrowKey();
   document.getElementById('limit-display').textContent=limit;
   const dates=getWeekDates();
   document.getElementById('week-label').textContent=`${formatDateShort(dates[0])} – ${formatDateShort(dates[6])}`;
   ['today','late','tomorrow'].forEach(id=>document.getElementById(`tab-${id}`).classList.toggle('active',activeFilter===id));
   const banner=document.getElementById('filter-banner');
-  if(activeFilter){
-    banner.classList.add('visible');
-    const labels={today:'Leituras de Hoje',late:'Leituras Atrasadas',tomorrow:'Leituras de Amanhã'};
-    document.getElementById('filter-banner-text').textContent=`Mostrando: ${labels[activeFilter]}`;
-  } else { banner.classList.remove('visible'); }
+  if(activeFilter){banner.classList.add('visible');const labels={today:'Leituras de Hoje',late:'Leituras Atrasadas',tomorrow:'Leituras de Amanhã'};document.getElementById('filter-banner-text').textContent=`Mostrando: ${labels[activeFilter]}`;}
+  else banner.classList.remove('visible');
   updateLateBadge();
   const grid=document.getElementById('week-grid'); grid.innerHTML='';
   dates.forEach(date=>{
-    const key=dateKey(date);
-    const rows=localCache[key]||[];
-    const active=rows.filter(r=>!r.concluido);
-    const done=rows.filter(r=>r.concluido);
-    const total=rows.length;
+    const key=dateKey(date),rows=localCache[key]||[];
+    const active=rows.filter(r=>!r.concluido),done=rows.filter(r=>r.concluido),total=rows.length;
     const pct=Math.min((total/limit)*100,100);
     let hideCard=false;
     if(activeFilter==='today'&&key!==tkKey) hideCard=true;
@@ -1159,163 +809,64 @@ function render() {
     let status=total>limit?'status-over':total>=limit?'status-warn':'status-ok';
     const hasPendingAlert=isPast(date)&&!isToday(date)&&active.length>0;
     let pendingAlertHTML='';
-    if(hasPendingAlert){
-      const names=active.slice(0,2).map(r=>escHtml(r.nome_cliente)).join(', ');
-      const extra=active.length>2?` e mais ${active.length-2}`:'';
-      pendingAlertHTML=`<div class="pending-alert"><span class="pending-alert-icon">😳</span><span>Ops… você esqueceu de <strong>${names}${extra}</strong>!</span></div>`;
-    }
+    if(hasPendingAlert){const names=active.slice(0,2).map(r=>escHtml(r.nome_cliente)).join(', ');const extra=active.length>2?` e mais ${active.length-2}`:'';pendingAlertHTML=`<div class="pending-alert"><span class="pending-alert-icon">😳</span><span>Ops… você esqueceu de <strong>${names}${extra}</strong>!</span></div>`;}
     let activeHTML='';
-    active.forEach(r=>{
-      const qPill=r.perguntas?`<span class="q-pill">${r.perguntas}p</span>`:'';
-      activeHTML+=`<div class="client-item">
-        <span class="client-name" title="${escHtml(r.nome_cliente)}">${escHtml(r.nome_cliente)}</span>
-        ${qPill}
-        <button class="action-btn btn-reschedule" title="Remarcar" onclick="openRescheduleModal('${key}','${r.id}','${escHtml(r.nome_cliente)}')">↗</button>
-        <button class="action-btn btn-done" title="Concluir" onclick="toggleDone('${key}','${r.id}',this)">✓</button>
-        <button class="action-btn btn-remove" title="Remover" onclick="removeClient('${key}','${r.id}',this)">✕</button>
-      </div>`;
-    });
+    active.forEach(r=>{const qPill=r.perguntas?`<span class="q-pill">${r.perguntas}p</span>`:'';activeHTML+=`<div class="client-item"><span class="client-name" title="${escHtml(r.nome_cliente)}">${escHtml(r.nome_cliente)}</span>${qPill}<button class="action-btn btn-reschedule" title="Remarcar" onclick="openRescheduleModal('${key}','${r.id}','${escHtml(r.nome_cliente)}')">↗</button><button class="action-btn btn-done" title="Concluir" onclick="toggleDone('${key}','${r.id}',this)">✓</button><button class="action-btn btn-remove" title="Remover" onclick="removeClient('${key}','${r.id}',this)">✕</button></div>`;});
     let doneHTML='';
-    done.forEach(r=>{
-      const qPill=r.perguntas?`<span class="q-pill">${r.perguntas}p</span>`:'';
-      doneHTML+=`<div class="client-item done">
-        <span class="client-name" title="${escHtml(r.nome_cliente)}">${escHtml(r.nome_cliente)}</span>
-        ${qPill}
-        <button class="action-btn btn-reschedule" title="Remarcar" onclick="openRescheduleModal('${key}','${r.id}','${escHtml(r.nome_cliente)}')">↗</button>
-        <button class="action-btn btn-reopen" title="Reabrir" onclick="toggleDone('${key}','${r.id}',this)">↩</button>
-        <button class="action-btn btn-remove" title="Remover" onclick="removeClient('${key}','${r.id}',this)">✕</button>
-      </div>`;
-    });
+    done.forEach(r=>{const qPill=r.perguntas?`<span class="q-pill">${r.perguntas}p</span>`:'';doneHTML+=`<div class="client-item done"><span class="client-name" title="${escHtml(r.nome_cliente)}">${escHtml(r.nome_cliente)}</span>${qPill}<button class="action-btn btn-reschedule" title="Remarcar" onclick="openRescheduleModal('${key}','${r.id}','${escHtml(r.nome_cliente)}')">↗</button><button class="action-btn btn-reopen" title="Reabrir" onclick="toggleDone('${key}','${r.id}',this)">↩</button><button class="action-btn btn-remove" title="Remover" onclick="removeClient('${key}','${r.id}',this)">✕</button></div>`;});
     const doneSectionHTML=done.length>0?`<div class="done-section"><div class="done-title">Leituras Entregues (${done.length})</div><div class="clients-list">${doneHTML}</div></div>`:'';
     const emptyActive=active.length===0?`<p class="empty-state">${total===0?'Nenhuma consulta agendada':'Todas as leituras concluídas 🎉'}</p>`:'';
     const todayBadge=isToday(date)?`<span class="today-badge">Hoje</span>`:'';
     const fullDate=`${date.getDate()} de ${MONTHS_PT[date.getMonth()].charAt(0).toUpperCase()}${MONTHS_PT[date.getMonth()].slice(1)} · ${date.getFullYear()}`;
     const card=document.createElement('article');
     card.className=`day-card ${status}${isToday(date)?' today':''}${hideCard?' hidden-by-filter':''}`;
-    card.innerHTML=`
-      ${pendingAlertHTML}
-      <div class="card-header">
-        <div class="day-name">${DAYS_PT[date.getDay()]}${todayBadge}</div>
-        <div class="day-date">${fullDate}</div>
-        <div class="slot-bar-wrap">
-          <div class="slot-info"><span class="slot-label">Vagas ocupadas</span><span class="slot-count">${total} / ${limit}</span></div>
-          <div class="slot-bar"><div class="slot-fill" style="width:${pct}%"></div></div>
-        </div>
-        ${done.length>0?`<div class="done-count-badge">◐ ${done.length} entregue${done.length>1?'s':''}</div>`:''}
-      </div>
-      <div class="card-body">
-        <div class="add-form">
-          <input type="text" id="name-${key}" class="input-name" placeholder="Nome da cliente…" maxlength="60"
-                 autocomplete="off" autocorrect="off" spellcheck="false" onkeydown="handleKeydown(event,'${key}')" />
-          <div class="q-stepper">
-            <button class="stepper-btn" onclick="changeQ('${key}',-1)">−</button>
-            <span class="stepper-val" id="qval-${key}">5</span>
-            <button class="stepper-btn" onclick="changeQ('${key}',1)">+</button>
-          </div>
-          <button class="add-btn" onclick="addClient('${key}')">+ Add</button>
-        </div>
-        <div class="clients-list">${activeHTML}</div>
-        ${emptyActive}
-        ${doneSectionHTML}
-      </div>`;
+    card.innerHTML=`${pendingAlertHTML}<div class="card-header"><div class="day-name">${DAYS_PT[date.getDay()]}${todayBadge}</div><div class="day-date">${fullDate}</div><div class="slot-bar-wrap"><div class="slot-info"><span class="slot-label">Vagas ocupadas</span><span class="slot-count">${total} / ${limit}</span></div><div class="slot-bar"><div class="slot-fill" style="width:${pct}%"></div></div></div>${done.length>0?`<div class="done-count-badge">◐ ${done.length} entregue${done.length>1?'s':''}</div>`:''}</div><div class="card-body"><div class="add-form"><input type="text" id="name-${key}" class="input-name" placeholder="Nome da cliente…" maxlength="60" autocomplete="off" autocorrect="off" spellcheck="false" onkeydown="handleKeydown(event,'${key}')" /><div class="q-stepper"><button class="stepper-btn" onclick="changeQ('${key}',-1)">−</button><span class="stepper-val" id="qval-${key}">5</span><button class="stepper-btn" onclick="changeQ('${key}',1)">+</button></div><button class="add-btn" onclick="addClient('${key}')">+ Add</button></div><div class="clients-list">${activeHTML}</div>${emptyActive}${doneSectionHTML}</div>`;
     grid.appendChild(card);
   });
 }
 
-async function renderWeek() {
-  const dates=getWeekDates();
-  await loadWeekData(dates);
-  render();
-}
+async function renderWeek() { const dates=getWeekDates(); await loadWeekData(dates); render(); }
 
-async function retryInit() {
-  document.getElementById('loading-retry').classList.remove('show');
-  showLoading('Reconectando…');
-  try {
-    await renderWeek();
-    hideLoading();
-  } catch(e) {
-    document.getElementById('loading-text').textContent = 'Erro ao carregar. Tente novamente.';
-    document.getElementById('loading-retry').classList.add('show');
-  }
-}
-
-/* ═══════════════════════════════════════════════
-   INIT — lógica simplificada e sem conflito
-   ═══════════════════════════════════════════════ */
+/* ═══════════════════════════════════════
+   INIT — versão definitiva para Android/iOS
+   Estratégia: confia na sessão local sem
+   chamar getUser() (que trava em rede lenta).
+   Só valida no servidor se getSession() ok.
+═══════════════════════════════════════ */
 (async function init() {
-  if (typeof supabase === 'undefined') {
+  if(typeof supabase==='undefined'){
     alert('Erro: biblioteca Supabase não carregou. Verifique sua conexão.');
     return;
   }
 
   sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
-    auth: {
-      // Persiste sessão no localStorage (padrão) — mas detectamos sessões inválidas logo abaixo
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true,
-    }
+    auth: { persistSession:true, autoRefreshToken:true, detectSessionInUrl:true }
   });
 
-  // ── Só escuta SIGNED_OUT depois que o app já iniciou ──
-  // Não usamos onAuthStateChange para inicializar o app,
-  // evitando conflito com a verificação abaixo.
+  // Escuta apenas SIGNED_OUT para reagir a logout
   sb.auth.onAuthStateChange((event, session) => {
-    if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
-      appStarted = false;
-      currentUser = null;
-      localCache = {};
+    if(event==='SIGNED_OUT' || event==='USER_DELETED') {
+      appStarted=false; currentUser=null; localCache={};
       showAuthScreen();
     }
-    // TOKEN_REFRESHED e SIGNED_IN são ignorados — o estado já foi tratado no init
   });
 
-  // ── Verifica sessão existente (com timeout de 6s para celular) ──
-  showLoading('Verificando sessão…');
-
-  let session = null;
+  // Tenta ler sessão local — sem timeout agressivo
+  // getSession() lê do localStorage, raramente precisa de rede
   try {
-    const result = await Promise.race([
-      sb.auth.getSession(),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 6000))
-    ]);
-    session = result?.data?.session ?? null;
-  } catch (e) {
-    console.warn('getSession falhou ou deu timeout:', e.message);
-    // Sem sessão confirmada — vai para login
-    showAuthScreen();
-    return;
-  }
+    const { data } = await sb.auth.getSession();
+    const session = data?.session;
 
-  if (!session?.user) {
-    // Nenhuma sessão salva — tela de login normalmente
-    showAuthScreen();
-    return;
-  }
-
-  // ── Sessão existe: valida se o usuário ainda existe no servidor ──
-  try {
-    const { data: { user }, error } = await Promise.race([
-      sb.auth.getUser(),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
-    ]);
-
-    if (error || !user) {
-      // Sessão fantasma (conta deletada, token inválido)
-      console.warn('Sessão inválida, limpando…');
-      await sb.auth.signOut();
+    if(session?.user) {
+      // Sessão válida localmente — entra no app direto
+      // O token será renovado automaticamente pelo Supabase se necessário
+      await enterApp(session.user);
+    } else {
+      // Sem sessão — tela de login
       showAuthScreen();
-      return;
     }
-
-    // Tudo certo — entra no app
-    await enterApp(user);
-
-  } catch (e) {
-    console.warn('getUser falhou ou deu timeout:', e.message);
-    // Sem confirmação do servidor — limpa por segurança e vai para login
-    try { await sb.auth.signOut(); } catch(_) {}
+  } catch(e) {
+    console.warn('getSession error:', e);
     showAuthScreen();
   }
 })();
