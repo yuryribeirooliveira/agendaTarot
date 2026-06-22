@@ -179,6 +179,12 @@ body{background:var(--bg);color:var(--text);font-family:"Poppins",sans-serif;fon
 .parcel-section.show{display:flex}
 
 @media(max-width:560px){.form-grid{grid-template-columns:1fr}.metric-grid{grid-template-columns:1fr 1fr}}
+
+/* PERIOD SELECTOR */
+.period-bar{display:flex;gap:6px;margin-bottom:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:5px;box-shadow:var(--shadow)}
+.period-btn{flex:1;padding:8px 4px;border:none;background:none;border-radius:var(--radius-sm);font-family:"Poppins",sans-serif;font-size:12px;font-weight:600;color:var(--text3);cursor:pointer;transition:all var(--tr);text-align:center}
+.period-btn.active{background:var(--purple);color:#fff;box-shadow:0 2px 8px rgba(103,65,217,.25)}
+.period-btn:not(.active):hover{background:var(--purple-lt);color:var(--purple)}
 </style>
 
 <script id="pwa-manifest">
@@ -256,6 +262,13 @@ body{background:var(--bg);color:var(--text);font-family:"Poppins",sans-serif;fon
 
 <!-- PAINEL -->
 <div class="page active" id="page-painel">
+  <div class="period-bar">
+    <button class="period-btn" onclick="setPeriod('hoje')">Hoje</button>
+    <button class="period-btn" onclick="setPeriod('7d')">7 dias</button>
+    <button class="period-btn" onclick="setPeriod('30d')">30 dias</button>
+    <button class="period-btn active" onclick="setPeriod('mes')">Este mês</button>
+    <button class="period-btn" onclick="setPeriod('tudo')">Tudo</button>
+  </div>
   <div class="metric-grid" id="metrics"></div>
   <div class="card">
     <div class="card-title">Receita por serviço</div>
@@ -768,23 +781,55 @@ async function saveEdit() {
 /* ── PAINEL ── */
 function fmt(v){return'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
 
+let currentPeriod = 'mes';
+
+const PERIOD_LABEL = {hoje:'Hoje','7d':'Últ. 7 dias','30d':'Últ. 30 dias',mes:'Este mês',tudo:'Tudo'};
+
+function setPeriod(p){
+  currentPeriod = p;
+  document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active'));
+  const map = {hoje:0,'7d':1,'30d':2,mes:3,tudo:4};
+  document.querySelectorAll('.period-btn')[map[p]].classList.add('active');
+  renderPainel();
+}
+
+function filterByPeriod(list){
+  const now = new Date();
+  const today = now.toISOString().slice(0,10);
+  if(currentPeriod==='hoje') return list.filter(e=>e.data_atendimento===today);
+  if(currentPeriod==='7d'){
+    const d=new Date(now); d.setDate(d.getDate()-6);
+    const from=d.toISOString().slice(0,10);
+    return list.filter(e=>e.data_atendimento>=from&&e.data_atendimento<=today);
+  }
+  if(currentPeriod==='30d'){
+    const d=new Date(now); d.setDate(d.getDate()-29);
+    const from=d.toISOString().slice(0,10);
+    return list.filter(e=>e.data_atendimento>=from&&e.data_atendimento<=today);
+  }
+  if(currentPeriod==='mes'){
+    const mes=String(now.getMonth()+1).padStart(2,'0'),ano=now.getFullYear();
+    return list.filter(e=>e.data_atendimento&&e.data_atendimento.startsWith(`${ano}-${mes}`));
+  }
+  return list;
+}
+
 function renderPainel(){
-  const total=entries.reduce((s,e)=>s+Number(e.valor),0);
-  const now=new Date(),mes=String(now.getMonth()+1).padStart(2,'0'),ano=now.getFullYear();
-  const eMes=entries.filter(e=>e.data_atendimento&&e.data_atendimento.startsWith(`${ano}-${mes}`));
-  const totalMes=eMes.reduce((s,e)=>s+Number(e.valor),0);
-  const ticket=entries.length?total/entries.length:0;
-  const pixTotal=entries.filter(e=>e.pgto==='pix').reduce((s,e)=>s+Number(e.valor),0);
+  const filtered = filterByPeriod(entries);
+  const total=filtered.reduce((s,e)=>s+Number(e.valor),0);
+  const ticket=filtered.length?total/filtered.length:0;
+  const pixTotal=filtered.filter(e=>e.pgto==='pix').reduce((s,e)=>s+Number(e.valor),0);
+  const label=PERIOD_LABEL[currentPeriod];
 
   document.getElementById('metrics').innerHTML=`
-    <div class="metric"><div class="metric-label">Receita total</div><div class="metric-value">${fmt(total)}</div><div class="metric-sub">${entries.length} atendimento${entries.length!==1?'s':''}</div></div>
-    <div class="metric"><div class="metric-label">Mês atual</div><div class="metric-value">${fmt(totalMes)}</div><div class="metric-sub">${eMes.length} este mês</div></div>
+    <div class="metric"><div class="metric-label">Receita · ${label}</div><div class="metric-value">${fmt(total)}</div><div class="metric-sub">${filtered.length} atendimento${filtered.length!==1?'s':''}</div></div>
     <div class="metric"><div class="metric-label">Ticket médio</div><div class="metric-value">${fmt(ticket)}</div><div class="metric-sub">por atendimento</div></div>
     <div class="metric"><div class="metric-label">Receita PIX</div><div class="metric-value">${fmt(pixTotal)}</div><div class="metric-sub">${total>0?Math.round(pixTotal/total*100):0}% do total</div></div>
+    <div class="metric"><div class="metric-label">Total geral</div><div class="metric-value">${fmt(entries.reduce((s,e)=>s+Number(e.valor),0))}</div><div class="metric-sub">${entries.length} atendimentos</div></div>
   `;
-  renderBars('bars-servico',entries,'servico','#534AB7');
-  renderBars('bars-pgto',entries,'pgto','#1D9E75',PGTO_LABEL);
-  renderBars('bars-origem',entries,'origem','#D85A30',ORIG_LABEL);
+  renderBars('bars-servico',filtered,'servico','#534AB7');
+  renderBars('bars-pgto',filtered,'pgto','#1D9E75',PGTO_LABEL);
+  renderBars('bars-origem',filtered,'origem','#D85A30',ORIG_LABEL);
 }
 
 function renderBars(elId,data,key,color,labelMap){
